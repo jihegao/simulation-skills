@@ -1,0 +1,9 @@
+{
+  "load_cases_n": [10.0, 18.0, 30.0, 45.0],
+  "panel_count_cases": [6],
+  "span_m": 0.60,
+  "width_m": 0.10,
+  "truss_depth_m": 0.12,
+  "glue_joint_capacity_n": 16.0,
+  "deflection_ratio_limit": 250.0
+}

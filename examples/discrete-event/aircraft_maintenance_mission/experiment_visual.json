@@ -1,0 +1,22 @@
+{
+  "model_path": "discrete-event-modeling/assets/aircraft_maintenance_mission/model.py",
+  "model_class": "AircraftMissionReliabilityModel",
+  "default_run": {
+    "seed": 20260613,
+    "horizon": 48.0,
+    "sample_interval": 0.25
+  },
+  "fixed_parameters": {
+    "mission_config_path": "/Users/gaojihe/Models/demo_gis_0925/任务配置表.xlsx",
+    "part_delay": 24.0,
+    "part_fill_rate": 0.9,
+    "sample_interval": 0.25,
+    "horizon": 48.0
+  },
+  "sweep": {
+    "param": null,
+    "values": [],
+    "runs_per_value": 1,
+    "seed_start": 3000
+  }
+}

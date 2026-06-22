@@ -1,0 +1,13 @@
+{
+  "experiment_name": "hospital_material_agv_capacity_sweep",
+  "model_class": "HospitalMaterialHandlingModel",
+  "steps": 144,
+  "seeds": [11, 12, 13],
+  "parameters": {
+    "agv_count": [6, 10, 14],
+    "step_seconds": 300,
+    "initial_time_seconds": 21600,
+    "number_of_waste_carts_on_floors": 12,
+    "demand_scale": 1.0
+  }
+}

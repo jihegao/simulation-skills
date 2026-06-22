@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Signalized Intersection ABM</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #101215;
+        --panel: #181c21;
+        --panel-2: #20252c;
+        --line: #343b45;
+        --road: #303741;
+        --road-mark: #6c7684;
+        --text: #eef2f7;
+        --muted: #a7b0bd;
+        --accent: #4fb6ff;
+        --east: #65d38b;
+        --south: #4fb6ff;
+        --stop: #ff6b6b;
+        --green: #48d375;
+        --red: #e55353;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        letter-spacing: 0;
+      }
+
+      main {
+        min-height: 100vh;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+      }
+
+      header,
+      footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 14px 18px;
+        border-bottom: 1px solid var(--line);
+        background: #14181d;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        border-bottom: 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      .shell {
+        display: grid;
+        grid-template-columns: minmax(280px, 360px) 1fr;
+        min-height: 0;
+      }
+
+      aside {
+        padding: 16px;
+        border-right: 1px solid var(--line);
+        background: var(--panel);
+        overflow: auto;
+      }
+
+      .controls {
+        display: grid;
+        gap: 14px;
+      }
+
+      .control-row {
+        display: grid;
+        gap: 7px;
+      }
+
+      .label-line {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      input[type="range"] {
+        width: 100%;
+        accent-color: var(--accent);
+      }
+
+      .actions {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+
+      button {
+        min-height: 38px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--panel-2);
+        color: var(--text);
+        font: inherit;
+        cursor: pointer;
+      }
+
+      button.primary {
+        background: #155f91;
+        border-color: #2e8bc4;
+      }
+
+      button:hover {
+        border-color: var(--accent);
+      }
+
+      .signal {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        margin: 14px 0;
+      }
+
+      .lamp {
+        min-height: 54px;
+        padding: 10px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: #15191f;
+      }
+
+      .lamp span {
+        color: var(--muted);
+        display: block;
+        font-size: 12px;
+      }
+
+      .lamp strong {
+        display: block;
+        margin-top: 5px;
+        font-size: 18px;
+      }
+
+      .lamp.green strong {
+        color: var(--green);
+      }
+
+      .lamp.red strong {
+        color: var(--red);
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .stat {
+        min-height: 68px;
+        padding: 10px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: #15191f;
+      }
+
+      .stat span {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .stat strong {
+        display: block;
+        margin-top: 6px;
+        font-size: 20px;
+      }
+
+      .stage {
+        position: relative;
+        min-width: 0;
+        min-height: 0;
+        display: grid;
+        place-items: stretch;
+        background:
+          linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+          linear-gradient(0deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+        background-size: 44px 44px;
+      }
+
+      canvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .legend {
+        position: absolute;
+        right: 14px;
+        top: 14px;
+        display: flex;
+        gap: 10px;
+        padding: 8px 10px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: rgba(16, 18, 21, 0.86);
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .key {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 999px;
+        display: inline-block;
+      }
+
+      .dot.east {
+        background: var(--east);
+      }
+
+      .dot.south {
+        background: var(--south);
+      }
+
+      .dot.stop {
+        background: var(--stop);
+      }
+
+      @media (max-width: 860px) {
+        .shell {
+          grid-template-columns: 1fr;
+          grid-template-rows: auto minmax(430px, 1fr);
+        }
+
+        aside {
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
+        }
+
+        .stats {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 560px) {
+        header,
+        footer {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .stats {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>周期世界十字路口仿真</h1>
+        <div id="status">step 0</div>
+      </header>
+
+      <section class="shell">
+        <aside>
+          <div class="controls">
+            <div class="actions">
+              <button id="play" class="primary" type="button">播放</button>
+              <button id="step" type="button">单步</button>
+              <button id="reset" type="button">重置</button>
+            </div>
+
+            <label class="control-row">
+              <span class="label-line"><span>横向车辆</span><strong id="horizontalValue">10</strong></span>
+              <input id="horizontalCars" type="range" min="0" max="30" step="1" value="10" />
+            </label>
+
+            <label class="control-row">
+              <span class="label-line"><span>纵向车辆</span><strong id="verticalValue">10</strong></span>
+              <input id="verticalCars" type="range" min="0" max="30" step="1" value="10" />
+            </label>
+
+            <label class="control-row">
+              <span class="label-line"><span>绿灯周期</span><strong id="greenValue">12</strong></span>
+              <input id="greenDuration" type="range" min="3" max="40" step="1" value="12" />
+            </label>
+
+            <label class="control-row">
+              <span class="label-line"><span>随机慢化</span><strong id="slowdownValue">0.05</strong></span>
+              <input id="slowdown" type="range" min="0" max="0.40" step="0.01" value="0.05" />
+            </label>
+
+            <label class="control-row">
+              <span class="label-line"><span>播放速度</span><strong id="tickValue">8 fps</strong></span>
+              <input id="tickRate" type="range" min="1" max="30" step="1" value="8" />
+            </label>
+          </div>
+
+          <div class="signal">
+            <div id="horizontalLamp" class="lamp green"><span>左 -> 右</span><strong>绿灯</strong></div>
+            <div id="verticalLamp" class="lamp red"><span>上 -> 下</span><strong>红灯</strong></div>
+          </div>
+
+          <div class="stats" aria-live="polite">
+            <div class="stat"><span>平均速度</span><strong id="avgSpeed">0.00</strong></div>
+            <div class="stat"><span>停止比例</span><strong id="stopped">0%</strong></div>
+            <div class="stat"><span>横向排队</span><strong id="horizontalQueue">0</strong></div>
+            <div class="stat"><span>纵向排队</span><strong id="verticalQueue">0</strong></div>
+          </div>
+        </aside>
+
+        <div class="stage">
+          <canvas id="world" aria-label="Intersection simulation canvas"></canvas>
+          <div class="legend" aria-label="Car legend">
+            <span class="key"><span class="dot east"></span>左->右</span>
+            <span class="key"><span class="dot south"></span>上->下</span>
+            <span class="key"><span class="dot stop"></span>等待</span>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <span>31 x 31 toroidal world</span>
+        <span>Left/right and top/bottom edges wrap</span>
+      </footer>
+    </main>
+
+    <script>
+      const gridSize = 31;
+      const center = Math.floor(gridSize / 2);
+      const canvas = document.querySelector("#world");
+      const ctx = canvas.getContext("2d");
+      const controls = {
+        play: document.querySelector("#play"),
+        step: document.querySelector("#step"),
+        reset: document.querySelector("#reset"),
+        horizontalCars: document.querySelector("#horizontalCars"),
+        verticalCars: document.querySelector("#verticalCars"),
+        greenDuration: document.querySelector("#greenDuration"),
+        slowdown: document.querySelector("#slowdown"),
+        tickRate: document.querySelector("#tickRate"),
+      };
+      const labels = {
+        status: document.querySelector("#status"),
+        horizontal: document.querySelector("#horizontalValue"),
+        vertical: document.querySelector("#verticalValue"),
+        green: document.querySelector("#greenValue"),
+        slowdown: document.querySelector("#slowdownValue"),
+        tickRate: document.querySelector("#tickValue"),
+        avgSpeed: document.querySelector("#avgSpeed"),
+        stopped: document.querySelector("#stopped"),
+        horizontalQueue: document.querySelector("#horizontalQueue"),
+        verticalQueue: document.querySelector("#verticalQueue"),
+        horizontalLamp: document.querySelector("#horizontalLamp"),
+        verticalLamp: document.querySelector("#verticalLamp"),
+      };
+
+      let seed = 11;
+      let cars = [];
+      let stepCount = 0;
+      let lastMoves = 0;
+      let playing = false;
+      let timer = null;
+
+      function random() {
+        seed = (seed * 1664525 + 1013904223) >>> 0;
+        return seed / 4294967296;
+      }
+
+      function lanePositions(count) {
+        const cells = Array.from({ length: gridSize }, (_, index) => index).filter((cell) => cell !== center);
+        if (count <= 0) return [];
+        const spacing = cells.length / count;
+        return Array.from({ length: count }, (_, index) => cells[Math.floor(index * spacing)]);
+      }
+
+      function lightState() {
+        const green = Number(controls.greenDuration.value);
+        const phaseStep = stepCount % (2 * green);
+        return {
+          horizontalGreen: phaseStep < green,
+          verticalGreen: phaseStep >= green,
+          phaseStep,
+        };
+      }
+
+      function reset() {
+        seed = 11;
+        stepCount = 0;
+        lastMoves = 0;
+        cars = [];
+        for (const x of lanePositions(Number(controls.horizontalCars.value))) {
+          cars.push({ x, y: center, direction: "east", moved: 0 });
+        }
+        for (const y of lanePositions(Number(controls.verticalCars.value))) {
+          cars.push({ x: center, y, direction: "south", moved: 0 });
+        }
+        updateLabels();
+        draw();
+      }
+
+      function target(car) {
+        if (car.direction === "east") return { x: (car.x + 1) % gridSize, y: car.y };
+        return { x: car.x, y: (car.y + 1) % gridSize };
+      }
+
+      function sameCell(a, b) {
+        return a.x === b.x && a.y === b.y;
+      }
+
+      function key(cell) {
+        return `${cell.x},${cell.y}`;
+      }
+
+      function tick() {
+        const signal = lightState();
+        const occupied = new Set(cars.map((car) => key(car)));
+        const reserved = new Set();
+        const planned = [];
+        const ordered = cars.slice().sort((a, b) => `${a.direction}-${a.y}-${a.x}`.localeCompare(`${b.direction}-${b.y}-${b.x}`));
+
+        for (const car of ordered) {
+          car.moved = 0;
+          const next = target(car);
+          const enteringIntersection = next.x === center && next.y === center && !sameCell(car, next);
+          const signalBlocked =
+            enteringIntersection &&
+            ((car.direction === "east" && !signal.horizontalGreen) ||
+              (car.direction === "south" && !signal.verticalGreen));
+          const randomBlocked = Number(controls.slowdown.value) > 0 && random() < Number(controls.slowdown.value);
+          if (occupied.has(key(next)) || reserved.has(key(next)) || signalBlocked || randomBlocked) {
+            planned.push({ car, next: { x: car.x, y: car.y } });
+            reserved.add(key(car));
+          } else {
+            planned.push({ car, next });
+            reserved.add(key(next));
+          }
+        }
+
+        lastMoves = 0;
+        for (const plan of planned) {
+          if (!sameCell(plan.car, plan.next)) {
+            plan.car.x = plan.next.x;
+            plan.car.y = plan.next.y;
+            plan.car.moved = 1;
+            lastMoves += 1;
+          }
+        }
+        stepCount += 1;
+        updateLabels();
+        draw();
+      }
+
+      function metrics() {
+        const count = cars.length || 1;
+        const hQueue = cars.filter((car) => car.direction === "east" && ((center - car.x + gridSize) % gridSize) <= 3).length;
+        const vQueue = cars.filter((car) => car.direction === "south" && ((center - car.y + gridSize) % gridSize) <= 3).length;
+        return {
+          avgSpeed: lastMoves / count,
+          stopped: 1 - lastMoves / count,
+          horizontalQueue: hQueue,
+          verticalQueue: vQueue,
+        };
+      }
+
+      function setLamp(element, isGreen) {
+        element.classList.toggle("green", isGreen);
+        element.classList.toggle("red", !isGreen);
+        element.querySelector("strong").textContent = isGreen ? "绿灯" : "红灯";
+      }
+
+      function updateLabels() {
+        const m = metrics();
+        const signal = lightState();
+        labels.status.textContent = `step ${stepCount}`;
+        labels.horizontal.textContent = controls.horizontalCars.value;
+        labels.vertical.textContent = controls.verticalCars.value;
+        labels.green.textContent = controls.greenDuration.value;
+        labels.slowdown.textContent = Number(controls.slowdown.value).toFixed(2);
+        labels.tickRate.textContent = `${controls.tickRate.value} fps`;
+        labels.avgSpeed.textContent = m.avgSpeed.toFixed(2);
+        labels.stopped.textContent = `${Math.round(m.stopped * 100)}%`;
+        labels.horizontalQueue.textContent = String(m.horizontalQueue);
+        labels.verticalQueue.textContent = String(m.verticalQueue);
+        setLamp(labels.horizontalLamp, signal.horizontalGreen);
+        setLamp(labels.verticalLamp, signal.verticalGreen);
+      }
+
+      function drawArrow(x1, y1, x2, y2, color) {
+        ctx.strokeStyle = color;
+        ctx.fillStyle = color;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+        const angle = Math.atan2(y2 - y1, x2 - x1);
+        ctx.beginPath();
+        ctx.moveTo(x2, y2);
+        ctx.lineTo(x2 - 8 * Math.cos(angle - Math.PI / 6), y2 - 8 * Math.sin(angle - Math.PI / 6));
+        ctx.lineTo(x2 - 8 * Math.cos(angle + Math.PI / 6), y2 - 8 * Math.sin(angle + Math.PI / 6));
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      function draw() {
+        const ratio = window.devicePixelRatio || 1;
+        const width = canvas.clientWidth;
+        const height = canvas.clientHeight;
+        canvas.width = Math.floor(width * ratio);
+        canvas.height = Math.floor(height * ratio);
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+        ctx.clearRect(0, 0, width, height);
+
+        const margin = Math.max(28, Math.min(width, height) * 0.08);
+        const size = Math.min(width, height) - margin * 2;
+        const cell = size / gridSize;
+        const originX = (width - size) / 2;
+        const originY = (height - size) / 2;
+
+        ctx.fillStyle = "#15191f";
+        ctx.fillRect(originX, originY, size, size);
+
+        ctx.strokeStyle = "rgba(255,255,255,0.06)";
+        ctx.lineWidth = 1;
+        for (let index = 0; index <= gridSize; index += 1) {
+          const p = originX + index * cell;
+          ctx.beginPath();
+          ctx.moveTo(p, originY);
+          ctx.lineTo(p, originY + size);
+          ctx.stroke();
+          const q = originY + index * cell;
+          ctx.beginPath();
+          ctx.moveTo(originX, q);
+          ctx.lineTo(originX + size, q);
+          ctx.stroke();
+        }
+
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--road");
+        ctx.fillRect(originX, originY + center * cell, size, cell);
+        ctx.fillRect(originX + center * cell, originY, cell, size);
+        ctx.fillStyle = "#424b57";
+        ctx.fillRect(originX + center * cell, originY + center * cell, cell, cell);
+
+        const signal = lightState();
+        ctx.fillStyle = signal.horizontalGreen ? "rgba(72,211,117,0.35)" : "rgba(229,83,83,0.35)";
+        ctx.fillRect(originX + (center - 1) * cell, originY + center * cell, cell, cell);
+        ctx.fillStyle = signal.verticalGreen ? "rgba(72,211,117,0.35)" : "rgba(229,83,83,0.35)";
+        ctx.fillRect(originX + center * cell, originY + (center - 1) * cell, cell, cell);
+
+        ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue("--road-mark");
+        ctx.lineWidth = 2;
+        ctx.setLineDash([8, 7]);
+        ctx.beginPath();
+        ctx.moveTo(originX, originY + (center + 0.5) * cell);
+        ctx.lineTo(originX + size, originY + (center + 0.5) * cell);
+        ctx.moveTo(originX + (center + 0.5) * cell, originY);
+        ctx.lineTo(originX + (center + 0.5) * cell, originY + size);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        drawArrow(originX + 8, originY + center * cell - 12, originX + 46, originY + center * cell - 12, "#a7b0bd");
+        drawArrow(originX + center * cell + 12, originY + 8, originX + center * cell + 12, originY + 46, "#a7b0bd");
+
+        for (const car of cars) {
+          const x = originX + (car.x + 0.5) * cell;
+          const y = originY + (car.y + 0.5) * cell;
+          ctx.fillStyle = car.moved
+            ? getComputedStyle(document.documentElement).getPropertyValue(car.direction === "east" ? "--east" : "--south")
+            : getComputedStyle(document.documentElement).getPropertyValue("--stop");
+          ctx.beginPath();
+          if (car.direction === "east") {
+            ctx.roundRect(x - cell * 0.36, y - cell * 0.22, cell * 0.72, cell * 0.44, Math.max(3, cell * 0.12));
+          } else {
+            ctx.roundRect(x - cell * 0.22, y - cell * 0.36, cell * 0.44, cell * 0.72, Math.max(3, cell * 0.12));
+          }
+          ctx.fill();
+        }
+      }
+
+      function setPlaying(next) {
+        playing = next;
+        controls.play.textContent = playing ? "暂停" : "播放";
+        if (timer) window.clearInterval(timer);
+        if (playing) {
+          timer = window.setInterval(tick, 1000 / Number(controls.tickRate.value));
+        }
+      }
+
+      controls.play.addEventListener("click", () => setPlaying(!playing));
+      controls.step.addEventListener("click", () => tick());
+      controls.reset.addEventListener("click", () => reset());
+      controls.horizontalCars.addEventListener("input", () => reset());
+      controls.verticalCars.addEventListener("input", () => reset());
+      controls.greenDuration.addEventListener("input", () => reset());
+      controls.slowdown.addEventListener("input", () => updateLabels());
+      controls.tickRate.addEventListener("input", () => {
+        updateLabels();
+        if (playing) setPlaying(true);
+      });
+      window.addEventListener("resize", draw);
+
+      reset();
+      setPlaying(true);
+    </script>
+  </body>
+</html>

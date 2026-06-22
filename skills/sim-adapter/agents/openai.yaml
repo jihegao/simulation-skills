@@ -1,0 +1,7 @@
+interface:
+  display_name: "Simulation Adapter"
+  short_description: "Route complex-system reasoning into simulation"
+  default_prompt: "Use $sim-adapter to decide whether my analysis question needs simulation evidence and which modeling method to load."
+
+policy:
+  allow_implicit_invocation: true

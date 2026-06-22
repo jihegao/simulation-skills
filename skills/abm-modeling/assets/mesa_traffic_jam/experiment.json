@@ -1,0 +1,15 @@
+{
+  "experiment_name": "traffic_intersection_load_sweep",
+  "model_class": "IntersectionTrafficModel",
+  "steps": 160,
+  "primary_metric": "average_speed",
+  "seeds": [11, 12, 13],
+  "parameters": {
+    "grid_size": 31,
+    "horizontal_cars": [6, 10, 14],
+    "vertical_cars": [6, 10, 14],
+    "green_duration": 12,
+    "yellow_duration": 0,
+    "random_slowdown": 0.05
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "case_id": "global_warming_system_dynamics",
+  "method": "system_dynamics",
+  "horizon": {
+    "start_year": 2025,
+    "end_year": 2040,
+    "checkpoints": [2030, 2035, 2040]
+  },
+  "default_inputs": {
+    "initial_co2_ppm": 424.6,
+    "initial_emissions_gtco2": 42.2,
+    "initial_temperature_c": 1.34,
+    "climate_sensitivity_c": 3.0,
+    "response_years": 40.0
+  },
+  "scenarios": [
+    {
+      "key": "rapid",
+      "name": "快速减排",
+      "annual_emissions_change": -0.08,
+      "airborne_fraction": 0.42,
+      "non_co2_forcing_2025": 0.20,
+      "non_co2_forcing_change": -0.006
+    },
+    {
+      "key": "baseline",
+      "name": "缓慢转向",
+      "annual_emissions_change": -0.005,
+      "airborne_fraction": 0.47,
+      "non_co2_forcing_2025": 0.20,
+      "non_co2_forcing_change": 0.008
+    },
+    {
+      "key": "high",
+      "name": "高排放延续",
+      "annual_emissions_change": 0.018,
+      "airborne_fraction": 0.52,
+      "non_co2_forcing_2025": 0.20,
+      "non_co2_forcing_change": 0.024
+    }
+  ],
+  "metrics": [
+    "temperature_c",
+    "co2_ppm",
+    "emissions_gtco2",
+    "forcing_wm2"
+  ],
+  "visualization": "examples/global_warming_system_dynamics/index.html",
+  "evidence_boundary": "Scenario comparison and short- to medium-term threshold checks; not a full Earth-system climate model."
+}

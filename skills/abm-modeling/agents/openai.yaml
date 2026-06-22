@@ -1,0 +1,4 @@
+interface:
+  display_name: "ABM Modeling"
+  short_description: "Build, run, and inspect Mesa ABMs"
+  default_prompt: "Use $abm-modeling to build a runnable Mesa model, run experiments, optionally generate a SolaraViz view, and interpret the results."

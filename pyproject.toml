@@ -1,0 +1,21 @@
+[project]
+name = "simulation-skills"
+version = "0.1.0"
+description = "Codex skills and examples for simulation-backed reasoning."
+requires-python = ">=3.10"
+dependencies = [
+  "mesa>=3.0",
+  "networkx>=3.0",
+  "simpy>=4.0",
+  "solara[assets]>=1.35",
+]
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["examples*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]

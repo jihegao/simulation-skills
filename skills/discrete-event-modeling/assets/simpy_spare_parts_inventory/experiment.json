@@ -1,0 +1,15 @@
+{
+  "experiment_name": "spare_parts_reorder_sweep",
+  "model_class": "SparePartsInventoryModel",
+  "until": 720,
+  "seeds": [11, 22],
+  "primary_metric": "service_level",
+  "parameters": {
+    "demand_interval": [12.0],
+    "initial_stock": [40],
+    "reorder_point": [10, 20],
+    "order_quantity": [40],
+    "lead_time": [72.0],
+    "monitor_interval": [24.0]
+  }
+}

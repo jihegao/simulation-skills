@@ -1,0 +1,14 @@
+{
+  "experiment_name": "air_defense_radar_zone_sweep",
+  "steps": 80,
+  "seeds": [11, 12, 13],
+  "parameters": {
+    "initial_aircraft": 6,
+    "aircraft_speed": 10,
+    "missile_speed": 20,
+    "radar_zone": [60, 100, 140],
+    "radar_max_missiles": 2,
+    "aircraft_z": 70,
+    "steps_per_day": 20
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "steps": 180,
+  "seeds": [1, 2, 3],
+  "parameters": {
+    "equipment_count": 100,
+    "service_capacity": [2, 3, 5],
+    "replace_old_equipment": [false, true],
+    "normal_failure_rate": 0.03
+  }
+}

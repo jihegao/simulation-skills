@@ -1,0 +1,15 @@
+{
+  "experiment_name": "des_queue_capacity_sweep",
+  "model_class": "CustomerServiceDesMesaModel",
+  "steps": 180,
+  "primary_metric": "avg_wait_minutes",
+  "seeds": [11, 12, 13],
+  "parameters": {
+    "server_count": [1, 2, 3],
+    "arrival_rate_per_hour": 12.0,
+    "mean_service_minutes": 8.0,
+    "patience_minutes": 20.0,
+    "step_minutes": 1.0
+  }
+}
+

@@ -1,0 +1,28 @@
+{
+  "model_path": "discrete-event-modeling/assets/aircraft_maintenance/model.py",
+  "model_class": "AircraftMaintenanceModel",
+  "default_run": {
+    "seed": 2026,
+    "horizon": 240,
+    "sample_interval": 2
+  },
+  "fixed_parameters": {
+    "arrival_mean": 12.0,
+    "service_time_mean": 18.0,
+    "parts_per_task_mean": 1.6,
+    "maintenance_bays": 2,
+    "technicians": 3,
+    "support_equipments": 2,
+    "initial_parts": 18,
+    "parts_capacity": 60,
+    "parts_reorder_point": 8,
+    "parts_reorder_qty": 25,
+    "parts_lead_time_mean": 14.0
+  },
+  "sweep": {
+    "param": "arrival_mean",
+    "values": [10.0, 14.0, 20.0],
+    "runs_per_value": 2,
+    "seed_start": 3000
+  }
+}

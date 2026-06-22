@@ -1,0 +1,18 @@
+{
+  "experiment_name": "three_echelon_spares_30_day_service_level",
+  "model_class": "ThreeEchelonSparesModel",
+  "until": 720,
+  "seeds": [101, 202, 303, 404, 505, 606, 707, 808, 909, 1001],
+  "primary_metric": "service_level",
+  "parameters": {
+    "demand_interval": [24.0],
+    "base_initial_stock": [10],
+    "relay_initial_stock": [1],
+    "local_initial_stock": [1],
+    "relay_target_stock": [1],
+    "local_target_stock": [1],
+    "relay_to_local_time": [10.0],
+    "base_to_relay_time": [48.0],
+    "monitor_interval": [24.0]
+  }
+}

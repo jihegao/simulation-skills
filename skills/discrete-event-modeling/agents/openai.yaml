@@ -1,0 +1,4 @@
+interface:
+  display_name: "Discrete-Event Modeling"
+  short_description: "Build and run SimPy DES models"
+  default_prompt: "Use $discrete-event-modeling. For the DES agent-swarm MVP, call discrete-event-modeling/scripts/des_mvp.py with --session-file for continuing conversations, or use chat mode for stdin-driven dialogue. Return answer.md plus ascii_topology.txt, metrics_chart.txt, and chart.csv paths so Codex, Claude Code, OpenCode, or direct CLI use all share the same deterministic local parsing, SimPy model generation, runner execution, and visual artifacts."

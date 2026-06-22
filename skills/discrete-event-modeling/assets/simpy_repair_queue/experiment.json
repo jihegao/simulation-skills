@@ -1,0 +1,14 @@
+{
+  "experiment_name": "repair_queue_capacity_sweep",
+  "model_class": "RepairQueueModel",
+  "until": 1440,
+  "seeds": [11, 22],
+  "primary_metric": "average_wait",
+  "parameters": {
+    "arrival_interval": [16.0],
+    "repair_time_mean": [45.0],
+    "repair_time_sigma": [9.0],
+    "repairers": [1, 2],
+    "monitor_interval": [120.0]
+  }
+}

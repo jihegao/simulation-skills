@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>三级备件调运物流仿真</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #18202a;
+      --muted: #5a6675;
+      --line: #c8d2dd;
+      --panel: #f7f9fb;
+      --base: #2d6cdf;
+      --relay: #12805c;
+      --local: #a45b13;
+      --warn: #b42318;
+      --ok: #067647;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: #ffffff;
+    }
+
+    header {
+      padding: 24px 28px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h1, h2, h3, p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 28px;
+      line-height: 1.15;
+      font-weight: 760;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    main {
+      padding: 24px 28px 36px;
+      display: grid;
+      gap: 24px;
+    }
+
+    .topology {
+      display: grid;
+      grid-template-columns: minmax(180px, 1fr) 120px minmax(180px, 1fr) 120px minmax(180px, 1fr);
+      align-items: center;
+      gap: 12px;
+    }
+
+    .node, .panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 16px;
+    }
+
+    .node {
+      min-height: 168px;
+      display: grid;
+      align-content: start;
+      gap: 12px;
+    }
+
+    .node h2 {
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .stock {
+      font-size: 38px;
+      font-weight: 760;
+      line-height: 1;
+    }
+
+    .base .stock { color: var(--base); }
+    .relay .stock { color: var(--relay); }
+    .local .stock { color: var(--local); }
+
+    .label {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .lane {
+      min-height: 88px;
+      border-top: 3px solid var(--line);
+      position: relative;
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .lane::after {
+      content: "";
+      position: absolute;
+      right: -2px;
+      top: -8px;
+      border-left: 11px solid var(--line);
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: #fff;
+      min-height: 94px;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .metric small {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow-wrap: anywhere;
+    }
+
+    th, td {
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    th {
+      color: var(--muted);
+      font-weight: 650;
+      width: 38%;
+    }
+
+    .checks {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .check {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .check::before {
+      content: "✓";
+      width: 20px;
+      height: 20px;
+      flex: 0 0 20px;
+      border-radius: 50%;
+      background: var(--ok);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .status {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 860px) {
+      header, main {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .topology, .grid, .metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .lane {
+        min-height: 54px;
+        border-top: 0;
+        border-left: 3px solid var(--line);
+      }
+
+      .lane::after {
+        left: -8px;
+        right: auto;
+        top: auto;
+        bottom: -2px;
+        border-top: 11px solid var(--line);
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-bottom: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>备件三级调运物流仿真</h1>
+    <p class="subtitle">30 天评估周期内，统计基层级现货即时满足的备件需求比例。</p>
+  </header>
+
+  <main>
+    <section class="topology" aria-label="三级保障拓扑">
+      <article class="node base">
+        <h2>基地级保障点</h2>
+        <div class="stock" id="base-stock">10</div>
+        <p class="label">初始库存 10 件；有限库存源，无上级补给。</p>
+      </article>
+
+      <div class="lane">
+        <strong>基地->中继 48h</strong>
+        <span id="base-pipe">运输中 0 件</span>
+      </div>
+
+      <article class="node relay">
+        <h2>中继级保障点</h2>
+        <div class="stock" id="relay-stock">1</div>
+        <p class="label">初始库存 1 件；向基层发运后向基地补足。</p>
+      </article>
+
+      <div class="lane">
+        <strong>中继->基层 10h</strong>
+        <span id="relay-pipe">运输中 0 件</span>
+      </div>
+
+      <article class="node local">
+        <h2>基层级保障点</h2>
+        <div class="stock" id="local-stock">1</div>
+        <p class="label">初始库存 1 件；需求到达时只用基层现货判定满足。</p>
+      </article>
+    </section>
+
+    <section class="metrics" aria-label="关键指标">
+      <div class="metric">
+        <small>30天满足率</small>
+        <strong id="service-level">等待结果</strong>
+      </div>
+      <div class="metric">
+        <small>平均总需求</small>
+        <strong id="demands">-</strong>
+      </div>
+      <div class="metric">
+        <small>平均满足需求</small>
+        <strong id="filled">-</strong>
+      </div>
+      <div class="metric">
+        <small>平均缺货次数</small>
+        <strong id="stockouts">-</strong>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="panel">
+        <h2>模型元素完整性</h2>
+        <div class="checks">
+          <div class="check">泊松需求过程：需求间隔服从指数分布，均值 24h。</div>
+          <div class="check">基地级保障点：初始 10 件备件，作为有限上游库存。</div>
+          <div class="check">中继级保障点：初始 1 件备件，基地->中继 48h。</div>
+          <div class="check">基层级保障点：初始 1 件备件，中继->基层 10h。</div>
+          <div class="check">满足率定义：需求到达瞬间基层有现货则满足，否则记为缺货。</div>
+          <div class="check">评估周期：30 天，即 720 小时。</div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <h2>实验参数</h2>
+        <table>
+          <tbody>
+            <tr><th>仿真时长</th><td>720h</td></tr>
+            <tr><th>随机种子</th><td>10 次重复实验</td></tr>
+            <tr><th>基层补给策略</th><td>消耗后补足到 1 件</td></tr>
+            <tr><th>中继补给策略</th><td>发运后补足到 1 件</td></tr>
+            <tr><th>主要指标</th><td>service_level = filled_demands / demands</td></tr>
+          </tbody>
+        </table>
+        <p class="status" id="load-status">正在读取 summary.json。</p>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const formatNumber = (value) => Number(value).toFixed(1).replace(/\.0$/, "");
+    const formatPercent = (value) => `${(Number(value) * 100).toFixed(1)}%`;
+
+    function setText(id, value) {
+      document.getElementById(id).textContent = value;
+    }
+
+    function updateFromSummary(summary) {
+      const metrics = summary.metrics || {};
+      setText("service-level", formatPercent(metrics.service_level.mean));
+      setText("demands", formatNumber(metrics.demands.mean));
+      setText("filled", formatNumber(metrics.filled_demands.mean));
+      setText("stockouts", formatNumber(metrics.stockouts.mean));
+
+      const firstFinal = summary.runs?.[0]?.final;
+      if (firstFinal) {
+        setText("base-stock", firstFinal.base_stock);
+        setText("relay-stock", firstFinal.relay_stock);
+        setText("local-stock", firstFinal.local_stock);
+        setText("base-pipe", `运输中 ${firstFinal.base_to_relay_in_transit} 件`);
+        setText("relay-pipe", `运输中 ${firstFinal.relay_to_local_in_transit} 件`);
+      }
+
+      setText("load-status", `已加载 ${summary.run_count} 次仿真实验结果。`);
+    }
+
+    fetch("summary.json", { cache: "no-store" })
+      .then((response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+      })
+      .then(updateFromSummary)
+      .catch(() => {
+        setText("load-status", "未找到 summary.json；请先运行实验并把结果文件放在此页面同目录。");
+      });
+  </script>
+</body>
+</html>

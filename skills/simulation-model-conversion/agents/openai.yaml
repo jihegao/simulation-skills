@@ -1,0 +1,4 @@
+interface:
+  display_name: "仿真模型转换"
+  short_description: "Convert simulation models into runnable validated artifacts"
+  default_prompt: "Use -model-conversion to convert a simulation case or model structure into a runnable model, visual surface, experiment outputs, and validation evidence."

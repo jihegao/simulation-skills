@@ -1,0 +1,15 @@
+{
+  "experiment_name": "traffic_intersection_deterministic_smoke",
+  "model_class": "IntersectionTrafficModel",
+  "steps": 80,
+  "primary_metric": "average_speed",
+  "seeds": [101],
+  "parameters": {
+    "grid_size": 31,
+    "horizontal_cars": 10,
+    "vertical_cars": 10,
+    "green_duration": 12,
+    "yellow_duration": 0,
+    "random_slowdown": 0.0
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "experiment_name": "forest_fire_density_sweep",
+  "model_class": "ForestFireModel",
+  "steps": 25,
+  "primary_metric": "burned_fraction",
+  "seeds": [11, 12],
+  "parameters": {
+    "width": 20,
+    "height": 20,
+    "density": [0.45, 0.65],
+    "regrowth_chance": [0.0]
+  }
+}
