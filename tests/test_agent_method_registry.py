@@ -83,11 +83,11 @@ class AgentMethodRegistryTest(unittest.TestCase):
                 "`physics-continuous-simulation`",
                 "SciPy ODE",
                 "PyBullet",
-                "`examples/biped_microgravity`",
+                "`examples/microgravity`",
             ],
         )
         self.assertIn("Physics Or Continuous Simulation", self.routing)
-        self.assertTrue(Path("examples/biped_microgravity/experiment.json").exists())
+        self.assertTrue(Path("examples/microgravity/experiment.json").exists())
 
     def test_physics_route_distinguishes_mujoco_from_structural_continuum_analysis(self):
         self.assertIn("MuJoCo routing boundary", self.routing)

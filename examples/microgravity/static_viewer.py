@@ -11,7 +11,7 @@ from typing import Any
 if __package__ in {None, ""}:
     sys.path.append(str(Path(__file__).resolve().parents[2]))
 
-from examples.biped_microgravity.model import MatchstickBridge
+from examples.microgravity.model import MatchstickBridge
 
 
 def build_view_payload(load_n: float = 18.0, panel_count: int = 6) -> dict[str, Any]:
@@ -441,7 +441,7 @@ def write_viewer_html(path: Path | str, payload: dict[str, Any]) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Write a Three.js matchstick bridge structure viewer.")
-    parser.add_argument("--output", type=Path, default=Path("outputs/biped_microgravity/viewer.html"))
+    parser.add_argument("--output", type=Path, default=Path("outputs/microgravity/viewer.html"))
     parser.add_argument("--load", type=float, default=18.0)
     parser.add_argument("--panel-count", type=int, default=6)
     args = parser.parse_args()

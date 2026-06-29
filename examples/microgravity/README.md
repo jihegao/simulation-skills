@@ -1,4 +1,4 @@
-# 火柴棍桥梁物理仿真
+# Matchstick Bridge Physics Simulation
 
 This example builds a simplified matchstick Warren-truss bridge and evaluates
 whether it can carry point loads without exceeding member, glued-joint, or
@@ -15,16 +15,16 @@ The core model is a quasi-static structural envelope:
 Run the sweep:
 
 ```bash
-python3 examples/biped_microgravity/run_experiment.py
+python3 examples/microgravity/run_experiment.py
 ```
 
 Write the browser viewer:
 
 ```bash
-python3 examples/biped_microgravity/static_viewer.py
+python3 examples/microgravity/static_viewer.py
 ```
 
-Open `outputs/biped_microgravity/viewer.html` to inspect the bridge structure,
+Open `outputs/microgravity/viewer.html` to inspect the bridge structure,
 load arrow, member layout, utilization metrics, and failure modes.
 
 This is a behavioral demonstration, not a finite-element solver. Results

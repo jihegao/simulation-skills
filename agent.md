@@ -53,7 +53,7 @@
 
 4. `physics-continuous-simulation`
    - 最小产物：状态变量、微分方程或物理引擎选择、步长、稳定性检查、边界条件。
-   - 首个案例：把 `examples/biped_microgravity` 从静态检查扩展为可选连续动力学模板。
+   - 首个案例：把 `examples/microgravity` 从静态检查扩展为可选连续动力学模板。
 
 5. `hybrid-simulation-patterns`
    - 最小产物：混合模型协议，而不是先做重运行时。

@@ -3,9 +3,9 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from examples.biped_microgravity.model import MatchstickBridge
-from examples.biped_microgravity.run_experiment import run_experiment
-from examples.biped_microgravity.static_viewer import build_view_payload, write_viewer_html
+from examples.microgravity.model import MatchstickBridge
+from examples.microgravity.run_experiment import run_experiment
+from examples.microgravity.static_viewer import build_view_payload, write_viewer_html
 
 
 class MatchstickBridgeTest(unittest.TestCase):

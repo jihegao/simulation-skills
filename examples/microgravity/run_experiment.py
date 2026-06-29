@@ -13,7 +13,7 @@ from typing import Any
 if __package__ in {None, ""}:
     sys.path.append(str(Path(__file__).resolve().parents[2]))
 
-from examples.biped_microgravity.model import MatchstickBridge
+from examples.microgravity.model import MatchstickBridge
 
 
 def run_experiment(config: dict[str, Any], output_dir: Path | str) -> dict[str, Any]:
@@ -84,8 +84,8 @@ def run_experiment(config: dict[str, Any], output_dir: Path | str) -> dict[str, 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run matchstick bridge load checks.")
-    parser.add_argument("--config", type=Path, default=Path("examples/biped_microgravity/experiment.json"))
-    parser.add_argument("--output-dir", type=Path, default=Path("outputs/biped_microgravity"))
+    parser.add_argument("--config", type=Path, default=Path("examples/microgravity/experiment.json"))
+    parser.add_argument("--output-dir", type=Path, default=Path("outputs/microgravity"))
     args = parser.parse_args()
     config = json.loads(args.config.read_text(encoding="utf-8"))
     print(json.dumps(run_experiment(config, args.output_dir), indent=2))
@@ -93,4 +93,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
