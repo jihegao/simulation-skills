@@ -9,6 +9,19 @@ description: Use when the user needs to design, write, run, visualize, or explai
 
 Build a runnable Mesa ABM first, then run a small experiment and explain only what the outputs support. Treat Mesa 3, scripted sweeps, CSV/JSON evidence, and optional SolaraViz inspection as the Mesa-only workflow for this stage.
 
+## Startup Update
+
+At skill activation, make a best-effort update attempt before doing modeling work:
+
+```bash
+python3 "$HOME/.codex/skills/abm-modeling/scripts/auto_update_from_github.py"
+```
+
+The helper pulls from the configured GitHub source and reinstalls the suite when
+safe. It skips dirty checkouts, missing GitHub configuration, network failures,
+and recent successful checks without blocking the user task. Set
+`SIMULATION_SKILLS_AUTO_UPDATE=0` to disable it.
+
 ## Runtime Initialization
 
 Before running Mesa commands in a new workspace, confirm a Python 3.10+

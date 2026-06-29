@@ -1,12 +1,13 @@
 ---
 name: simulation-model-conversion
 description: >
-  Convert simulation cases, model descriptions, AnyLogic/Mesa/SimPy structures,
-  or visual prototype requirements into runnable simulation artifacts. Use when
-  Codex needs to migrate, reproduce, or translate a simulation model across
-  runtimes such as Mesa ABM, SimPy DES, system dynamics, static HTML/legacy JS,
-  or scenario-pack JSON while preserving assumptions, mechanisms, metrics,
-  visualization requirements, and validation evidence.
+  Convert simulation cases, model descriptions, AnyLogic, NetLogo, Repast,
+  Mesa, SimPy, or visual prototype structures into runnable simulation
+  artifacts. Use when Codex needs to parse, migrate, reproduce, or translate a
+  simulation model across runtimes such as Mesa ABM, SimPy DES, system
+  dynamics, static HTML/legacy JS, or scenario-pack JSON while preserving
+  assumptions, mechanisms, metrics, visualization requirements, and validation
+  evidence.
 ---
 
 # Simulation Model Conversion
@@ -17,11 +18,27 @@ Convert a simulation source into a runnable target without pretending runtime
 equivalence. Preserve mechanism truth, state assumptions, and produce artifacts
 that can be tested, inspected, and rerun.
 
+## Startup Update
+
+At skill activation, make a best-effort update attempt before conversion work:
+
+```bash
+python3 "$HOME/.codex/skills/simulation-model-conversion/scripts/auto_update_from_github.py"
+```
+
+The helper pulls from the configured GitHub source and reinstalls the suite when
+safe. It skips dirty checkouts, missing GitHub configuration, network failures,
+and recent successful checks without blocking the user task. Set
+`SIMULATION_SKILLS_AUTO_UPDATE=0` to disable it.
+
 ## Workflow
 
 1. **Identify the source boundary.** Name the source type: prose case card,
-   `.alp` import, existing Python model, spreadsheet, JSON spec, browser
-   prototype, or mixed artifacts. Inspect real local files before making claims.
+   `.alp` import, NetLogo `.nlogo`, Repast Java/scenario project, Mesa Python
+   model, spreadsheet, JSON spec, browser prototype, or mixed artifacts.
+   Inspect real local files before making claims. For NetLogo, Repast, or Mesa
+   sources, read `references/abm-source-parsing.md` and run the bundled
+   inspector when files are available.
 2. **Extract the mechanism contract.** Record entities, states, events,
    resources, queues, spatial movement, stochastic rules, parameters, costs,
    metrics, and visualization needs.
@@ -80,7 +97,28 @@ When an importer is used, treat its output as structural evidence only. Read
 the import report before claiming counts, state names, transitions, or default
 parameters.
 
+## ABM Source Inspector
+
+For NetLogo, Repast/Repast Simphony, and Mesa source files, use:
+
+```bash
+python skills/simulation-model-conversion/scripts/inspect_abm_source.py <source> --format markdown
+```
+
+Use the JSON output for exact mapping tables:
+
+```bash
+python skills/simulation-model-conversion/scripts/inspect_abm_source.py <source> --format json
+```
+
+The inspector extracts candidate agents, spaces, parameters, procedures,
+schedulers, metrics, and visualization elements. Treat the output as a starting
+point for the mechanism contract; manually review dynamic code, runtime
+configuration, scheduler order, random seeds, and UI defaults before converting.
+
 ## Reference
 
 Read `references/conversion-checklist.md` when the task includes unclear model
 boundaries, multiple possible runtimes, or a required visual/UI conversion.
+Read `references/abm-source-parsing.md` when the source is NetLogo, Repast,
+Mesa, or another existing ABM codebase.

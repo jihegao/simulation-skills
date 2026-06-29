@@ -65,6 +65,27 @@ Recommend an engine based on fidelity:
 - PyBullet, MuJoCo, or Box2D for rigid-body interaction
 - domain solvers for fluid, structural, thermal, or electrical systems
 
+MuJoCo routing boundary:
+
+- Recommend MuJoCo when the dominant mechanism is articulated rigid-body
+  dynamics, joint constraints, robot balance/gait, contact-rich control,
+  biomechanics, trajectory optimization, system identification, or
+  reinforcement-learning environments.
+- Do not make MuJoCo the default for structural, continuum, material-load, or
+  failure-analysis questions such as stress/strain, buckling, glue or joint
+  failure, deflection, fracture, fatigue, load rating, deformation fields, or
+  stiffness/compliance. Route those to a structural/FEM solver, material model,
+  multibody-flexible-body route, or simplified truss/beam/shell model first,
+  depending on required fidelity.
+- For browser-visible teaching prototypes, use Three.js plus a lightweight
+  physics engine such as cannon-es, Rapier, or Ammo.js when interactivity and
+  inspection matter more than engineering-grade structural fidelity.
+- When a problem mixes articulated bodies or moving payloads with load-bearing
+  structures, choose the authoritative layer explicitly: MuJoCo may own the
+  moving rigid-body/contact controller, while structural response, material
+  capacity, deformation, and failure should still be checked by a structural,
+  continuum, or FEM-oriented route.
+
 ## Monte Carlo And Sensitivity Models
 
 Choose Monte Carlo when uncertainty over parameters matters more than internal dynamics.

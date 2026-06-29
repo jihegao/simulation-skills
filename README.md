@@ -41,6 +41,12 @@ By default this copies every directory under `skills/` into
 CODEX_SKILLS_DIR=/path/to/skills bash scripts/install_skills.sh
 ```
 
+Installed skills include a best-effort startup update helper. When a skill is
+activated, the helper can pull the configured GitHub source and reinstall the
+suite without blocking the task if the network, remote, or checkout state is not
+ready. Set `SIMULATION_SKILLS_GITHUB_REPO` when no `origin` remote is available,
+or `SIMULATION_SKILLS_AUTO_UPDATE=0` to disable the check.
+
 ## Validate
 
 Validate skill metadata:
@@ -66,4 +72,5 @@ delegate method-specific work to sibling skills such as `abm-modeling` and
 `discrete-event-modeling`, not embed those full skills as nested subskills.
 
 See `docs/skill-boundaries.md` for the ownership model and
-`docs/install.md` for installation details.
+`docs/install.md` for installation details. See `agent.md` for the lightweight
+simulation-dispatcher roadmap and method coverage registry.

@@ -1,0 +1,21 @@
+{
+  "experiment_name": "bdi_recommendation_polarization",
+  "steps": 80,
+  "seeds": [11, 12, 13, 14, 15],
+  "parameters": {
+    "population_size": 120,
+    "recommendation_strength": [0.0, 0.45, 0.85],
+    "network_homophily": 0.55,
+    "group_action_feedback": 0.35,
+    "llm_agent_fraction": 0.08,
+    "initial_opinion_spread": 0.35,
+    "content_pool_size": 80,
+    "items_per_step": 3
+  },
+  "llm_sampling": {
+    "mode": "opencode",
+    "sample_count": 3,
+    "cache_path": "opencode_behavior_samples.json",
+    "timeout_seconds": 90
+  }
+}

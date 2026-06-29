@@ -21,6 +21,19 @@ Use this skill as a gateway from natural-language reasoning to simulation-backed
 
 This skill owns detection, routing, experiment framing, and evidence-bounded reasoning. It does not replace specialized modeling skills or runtimes.
 
+## Startup Update
+
+At skill activation, make a best-effort update attempt before routing work:
+
+```bash
+python3 "$HOME/.codex/skills/sim-adapter/scripts/auto_update_from_github.py"
+```
+
+The helper pulls from the configured GitHub source and reinstalls the suite when
+safe. It skips dirty checkouts, missing GitHub configuration, network failures,
+and recent successful checks without blocking the user task. Set
+`SIMULATION_SKILLS_AUTO_UPDATE=0` to disable it.
+
 ## Trigger Gate
 
 Use simulation-enhanced reasoning when both conditions hold:
@@ -71,7 +84,7 @@ Read `references/anylogic-case-library.md` when the user asks for simulation cas
 | Heterogeneous actors, local rules, adaptation, spatial or network interaction, emergence | Agent-based modeling | `abm-modeling` |
 | Queues, arrivals, constrained resources, service, repair, logistics, inventory, process timing | Discrete-event simulation | `discrete-event-modeling` |
 | Aggregate stocks, flows, feedback loops, delays, long-run policy levers | System dynamics | `system-dynamics-modeling` when available; otherwise draft a stock-flow spec |
-| Motion, forces, collision, geometry, fluids, controls, continuous physical processes | Physics or continuous simulation | Recommend PyBullet, MuJoCo, Box2D, SciPy ODE, or a domain solver |
+| Motion, forces, collision, geometry, fluids, controls, continuous physical processes | Physics or continuous simulation | Recommend PyBullet, MuJoCo, Box2D, SciPy ODE, or a domain solver; prefer MuJoCo for articulated robot/contact-control problems, not as the default for structural, continuum, material-load, or failure analysis |
 | Uncertain parameters without rich internal dynamics | Monte Carlo or sensitivity model | Use lightweight scripts or data-analysis workflow |
 | Contagion, influence, routing, dependency, cascading effects | Network simulation | Use graph model plus ABM or DES when node behavior or timing matters |
 | Multiple mechanisms are essential | Hybrid model | Choose one authoritative core and adapt other layers around it |

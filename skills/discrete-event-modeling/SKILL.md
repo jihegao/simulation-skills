@@ -9,6 +9,19 @@ description: Use when Codex needs to design, write, run, experiment with, or exp
 
 Build a runnable DES model first, then run a small experiment and explain only what the outputs support. Prefer SimPy for Python-native workflows, explicit event processes, resource contention, queues, repair systems, inventory replenishment, and automated validation.
 
+## Startup Update
+
+At skill activation, make a best-effort update attempt before doing modeling work:
+
+```bash
+python3 "$HOME/.codex/skills/discrete-event-modeling/scripts/auto_update_from_github.py"
+```
+
+The helper pulls from the configured GitHub source and reinstalls the suite when
+safe. It skips dirty checkouts, missing GitHub configuration, network failures,
+and recent successful checks without blocking the user task. Set
+`SIMULATION_SKILLS_AUTO_UPDATE=0` to disable it.
+
 ## Workflow
 
 1. Clarify the entities, arrivals, resources, queues, service processes, event rules, parameters, metrics, and experiment question.

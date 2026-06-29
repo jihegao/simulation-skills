@@ -24,6 +24,29 @@ The installer copies these directories as flat siblings:
 This flat layout matters because Codex skill discovery expects independent
 skill folders, each with its own `SKILL.md`.
 
+## Startup Auto-Update
+
+`scripts/install_skills.sh` copies `scripts/auto_update_skills.py` into every
+installed skill as `scripts/auto_update_from_github.py`. Each skill's
+`SKILL.md` asks Codex to run that helper at activation.
+
+The helper is best-effort:
+
+- It uses `SIMULATION_SKILLS_GITHUB_REPO` first, then the source checkout's
+  `origin` remote.
+- It only treats GitHub remotes as update sources.
+- It skips dirty source or cache checkouts instead of overwriting local work.
+- It reinstalls the suite into `CODEX_SKILLS_DIR` or the current local Codex
+  skills directory after a successful update.
+- It records a short cooldown under `~/.cache/simulation-skills` to avoid
+  repeated network checks in the same working session.
+
+Disable it with:
+
+```bash
+SIMULATION_SKILLS_AUTO_UPDATE=0
+```
+
 ## Validate Metadata
 
 Run:

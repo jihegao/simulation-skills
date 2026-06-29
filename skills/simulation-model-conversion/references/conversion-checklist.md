@@ -8,6 +8,8 @@
 - Statecharts, events, transitions, service processes, or equations.
 - Parameters, distributions, default values, and controls.
 - Metrics, costs, logs, plots, and visual animation requirements.
+- For ABM source projects, include the output from
+  `scripts/inspect_abm_source.py` when the source is NetLogo, Repast, or Mesa.
 
 ## Mapping Table
 
@@ -34,6 +36,14 @@ Use a compact table:
 
 - AnyLogic agent/statechart model to Mesa: keep agents as Python objects and
   statechart states as explicit string fields or enums.
+- NetLogo to Mesa: map breeds to agent classes, `*-own` blocks to state fields,
+  patches to a grid layer, and `setup`/`go` tick semantics to explicit model
+  methods.
+- Repast to Mesa: map `ContextBuilder` population to model initialization,
+  projections to Mesa spaces or networks, and `@ScheduledMethod` annotations to
+  explicit step phases with preserved priority/interval notes.
+- Mesa to another target: extract model/agent classes, constructor parameters,
+  scheduler or agent-set iteration order, spaces, and `DataCollector` reporters.
 - AnyLogic process blocks to SimPy: map seize-delay-release to `Resource`
   requests and `env.timeout`.
 - Mesa/Solara to legacy JS: move model state and step rules into browser-side
