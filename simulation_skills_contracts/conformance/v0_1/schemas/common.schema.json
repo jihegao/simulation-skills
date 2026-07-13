@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://simulation-skills.local/contracts/v0.1/common.schema.json",
+  "x-contract-id": "simulation.contract_common",
+  "x-schema-version": "0.1.0",
+  "title": "Simulation Skills Version 0.1 Common Types",
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "contractIdentifier": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 128,
+      "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$"
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)$"
+    },
+    "contractLine": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+@[0-9]+\\.[0-9]+$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "utcTimestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]{1,9})?Z$"
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": {"enum": ["user", "controller", "adapter", "migration"]},
+        "id": {"$ref": "#/$defs/identifier"}
+      }
+    },
+    "objectRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contract", "schema_version", "object_id", "revision", "digest"],
+      "properties": {
+        "contract": {"$ref": "#/$defs/contractIdentifier"},
+        "schema_version": {"$ref": "#/$defs/semver"},
+        "object_id": {"$ref": "#/$defs/identifier"},
+        "revision": {"type": "integer", "minimum": 1},
+        "digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "artifactRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "digest", "media_type", "semantic_role"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/identifier"},
+        "digest": {"$ref": "#/$defs/digest"},
+        "media_type": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9!#$&^_.+-]+/[A-Za-z0-9!#$&^_.+-]+$"
+        },
+        "semantic_role": {"$ref": "#/$defs/identifier"}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["parent_refs", "source_artifact_refs"],
+      "properties": {
+        "parent_refs": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/objectRef"},
+          "uniqueItems": true
+        },
+        "source_artifact_refs": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/artifactRef"},
+          "uniqueItems": true
+        }
+      }
+    },
+    "extensionValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "schema_ref", "payload"],
+      "properties": {
+        "required": {"type": "boolean"},
+        "schema_ref": {"type": "string", "minLength": 1, "maxLength": 512},
+        "payload": {"type": "object"}
+      }
+    },
+    "extensions": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-z][a-z0-9]*(?:\\.[a-z][a-z0-9_]*){2,}$": {"$ref": "#/$defs/extensionValue"}
+      },
+      "additionalProperties": false
+    },
+    "unit": {"type": "string", "minLength": 1, "maxLength": 64},
+    "parameter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["parameter_id", "value", "unit"],
+      "properties": {
+        "parameter_id": {"$ref": "#/$defs/identifier"},
+        "value": {"type": ["number", "integer", "string", "boolean"]},
+        "unit": {"$ref": "#/$defs/unit"}
+      }
+    },
+    "metricDefinition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metric_id", "description", "unit"],
+      "properties": {
+        "metric_id": {"$ref": "#/$defs/identifier"},
+        "description": {"type": "string", "minLength": 1},
+        "unit": {"$ref": "#/$defs/unit"}
+      }
+    },
+    "metricValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metric_id", "value", "unit", "dimensions"],
+      "properties": {
+        "metric_id": {"$ref": "#/$defs/identifier"},
+        "value": {"type": "number"},
+        "unit": {"$ref": "#/$defs/unit"},
+        "dimensions": {"type": "object"}
+      }
+    }
+  }
+}

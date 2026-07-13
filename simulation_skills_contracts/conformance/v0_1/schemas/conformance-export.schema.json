@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://simulation-skills.local/contracts/v0.1/conformance-export.schema.json",
+  "x-contract-id": "simulation.conformance_export",
+  "x-schema-version": "0.1.0",
+  "title": "Provider Conformance Export Manifest 0.1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "export_version", "protocol_version", "provider", "documents", "adapter"],
+  "properties": {
+    "contract": {"const": "simulation.conformance_export"},
+    "schema_version": {"const": "0.1.0"},
+    "export_version": {"const": "0.1.0"},
+    "protocol_version": {"const": "0.1.0"},
+    "provider": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "contract_version", "source_tree_digest"],
+      "properties": {
+        "repository": {"const": "simulation-skills"},
+        "contract_version": {"const": "0.1.0"},
+        "source_tree_digest": {"$ref": "common.schema.json#/$defs/digest"}
+      }
+    },
+    "documents": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["relative_path", "owner", "contract_id", "schema_version", "kind", "digest", "schema_ref", "validity", "case_id", "validation_layer", "expected_failure_code"],
+        "properties": {
+          "relative_path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$"},
+          "owner": {"const": "simulation-skills"},
+          "contract_id": {"$ref": "common.schema.json#/$defs/contractIdentifier"},
+          "schema_version": {"const": "0.1.0"},
+          "kind": {"enum": ["schema", "fixture", "case", "adapter_manifest"]},
+          "digest": {"$ref": "common.schema.json#/$defs/digest"},
+          "schema_ref": {"type": ["string", "null"], "minLength": 1},
+          "validity": {"enum": ["valid", "invalid", null]},
+          "case_id": {"type": ["string", "null"], "minLength": 1},
+          "validation_layer": {"enum": ["schema", "semantic", null]},
+          "expected_failure_code": {"type": ["string", "null"], "minLength": 1}
+        }
+      }
+    },
+    "adapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["manifest_document"],
+      "properties": {"manifest_document": {"const": "adapter-manifest.json"}}
+    }
+  }
+}

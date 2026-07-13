@@ -1,0 +1,301 @@
+{
+  "case_id": "equipment-maintenance",
+  "contract": "simulation.conformance_case",
+  "expected": {
+    "artifact_semantic_role": "result_set",
+    "result_set_contract": "simulation.result_set@0.1",
+    "top_level_failure_codes": [
+      "protocol_incompatible",
+      "input_contract_failed",
+      "adapter_failed",
+      "output_contract_failed",
+      "artifact_contract_failed",
+      "timeout",
+      "cancelled"
+    ]
+  },
+  "mechanism": "maintenance_repair",
+  "provider_fragment": {
+    "domain_pack": {
+      "adapter_requirements": {
+        "method_families": [
+          "discrete_event"
+        ],
+        "operations": [
+          "experiment.run"
+        ],
+        "seed_control": "required"
+      },
+      "compatible_modeling_ir": [
+        "simulation.model_spec@0.1"
+      ],
+      "contract": "simulation.domain_pack",
+      "created_at": "2026-07-14T00:00:00Z",
+      "created_by": {
+        "id": "simulation-skills.contract-builder",
+        "kind": "adapter"
+      },
+      "default_experiment_templates": [
+        "equipment-maintenance-experiment"
+      ],
+      "extensions": {},
+      "method_payload_contracts": [
+        "simulation.des_method_payload@0.1"
+      ],
+      "metric_definitions": [
+        {
+          "description": "Completed jobs in the fixed horizon.",
+          "metric_id": "completed_jobs",
+          "unit": "count"
+        },
+        {
+          "description": "Mean pre-service wait.",
+          "metric_id": "average_wait",
+          "unit": "hour"
+        }
+      ],
+      "object_id": "equipment-maintenance",
+      "pack_id": "equipment-maintenance",
+      "pack_version": "0.1.0",
+      "parent_revision": null,
+      "provenance": {
+        "parent_refs": [],
+        "source_artifact_refs": []
+      },
+      "revision": 1,
+      "scenario_templates": [
+        {
+          "schema_ref": "urn:simulation-skills:equipment-maintenance:scenario@0.1",
+          "template_id": "equipment-maintenance-baseline"
+        }
+      ],
+      "schema_version": "0.1.0",
+      "validation_fixture_refs": [
+        "cases/equipment-maintenance/case.json"
+      ],
+      "visualization_hints": [
+        "metric_table",
+        "queue_chart"
+      ]
+    },
+    "domain_pack_descriptor": {
+      "manifest_digest": "sha256:80b3e96eb7ab1c8afdd8d1e220fead0ed576fcc5b978c235c4be1daa19dfa160",
+      "pack_id": "equipment-maintenance",
+      "pack_version": "0.1.0",
+      "template_id": "equipment-maintenance-baseline"
+    },
+    "expected_result_template": {
+      "adapter_diagnostics": [
+        {
+          "code": "fixture_checks_passed",
+          "fixture_only": true
+        }
+      ],
+      "claim_state": "draft_unreviewed",
+      "metrics": [
+        {
+          "dimensions": {},
+          "metric_id": "completed_jobs",
+          "unit": "count",
+          "value": 100
+        },
+        {
+          "dimensions": {},
+          "metric_id": "average_wait",
+          "unit": "hour",
+          "value": 1.3
+        }
+      ],
+      "seed": 17
+    },
+    "method_payload": {
+      "arrival_processes": [
+        {
+          "arrival_id": "equipment-maintenance-arrivals",
+          "distribution": "exponential",
+          "entity_type_id": "equipment-maintenance-job",
+          "parameters": [
+            {
+              "parameter_id": "mean_interarrival",
+              "unit": "hour",
+              "value": 2
+            }
+          ]
+        }
+      ],
+      "contract": "simulation.des_method_payload",
+      "created_at": "2026-07-14T00:00:00Z",
+      "created_by": {
+        "id": "simulation-skills.contract-builder",
+        "kind": "adapter"
+      },
+      "entity_types": [
+        {
+          "entity_type_id": "equipment-maintenance-job"
+        }
+      ],
+      "extensions": {},
+      "horizon": 72,
+      "object_id": "des-equipment-maintenance",
+      "output_metrics": [
+        {
+          "description": "Completed jobs in the fixed horizon.",
+          "metric_id": "completed_jobs",
+          "unit": "count"
+        },
+        {
+          "description": "Mean pre-service wait.",
+          "metric_id": "average_wait",
+          "unit": "hour"
+        }
+      ],
+      "parent_revision": null,
+      "process_steps": [
+        {
+          "parameters": [
+            {
+              "parameter_id": "minimum",
+              "unit": "hour",
+              "value": 0.5
+            },
+            {
+              "parameter_id": "mode",
+              "unit": "hour",
+              "value": 1
+            },
+            {
+              "parameter_id": "maximum",
+              "unit": "hour",
+              "value": 2
+            }
+          ],
+          "resource_id": "maintenance-team",
+          "service_distribution": "triangular",
+          "step_id": "maintenance_repair-service"
+        }
+      ],
+      "provenance": {
+        "parent_refs": [],
+        "source_artifact_refs": []
+      },
+      "resources": [
+        {
+          "capacity": 2,
+          "capacity_unit": "count",
+          "resource_id": "maintenance-team"
+        }
+      ],
+      "revision": 1,
+      "routing": [],
+      "schema_version": "0.1.0",
+      "time_unit": "hour"
+    },
+    "model_spec": {
+      "assumptions": [
+        "This fixture checks contracts only; it does not establish behavioral validity."
+      ],
+      "contract": "simulation.model_spec",
+      "created_at": "2026-07-14T00:00:00Z",
+      "created_by": {
+        "id": "simulation-skills.contract-builder",
+        "kind": "adapter"
+      },
+      "domain_extensions": [],
+      "extensions": {},
+      "implementation_artifact_ref": null,
+      "method_payload_ref": {
+        "contract": "simulation.des_method_payload",
+        "digest": "sha256:d3c3a7c8f97a27f7959cf1967221b0074ddb59f47c83954086148c9f497de964",
+        "object_id": "des-equipment-maintenance",
+        "revision": 1,
+        "schema_version": "0.1.0"
+      },
+      "metrics": [
+        {
+          "description": "Completed jobs in the fixed horizon.",
+          "metric_id": "completed_jobs",
+          "unit": "count"
+        },
+        {
+          "description": "Mean pre-service wait.",
+          "metric_id": "average_wait",
+          "unit": "hour"
+        }
+      ],
+      "object_id": "model-equipment-maintenance",
+      "parameters": [
+        {
+          "parameter_id": "lead_time",
+          "unit": "hour",
+          "value": 48
+        },
+        {
+          "parameter_id": "resource_capacity",
+          "unit": "count",
+          "value": 2
+        }
+      ],
+      "parent_revision": null,
+      "provenance": {
+        "parent_refs": [],
+        "source_artifact_refs": []
+      },
+      "revision": 1,
+      "schema_version": "0.1.0",
+      "system_boundary": {
+        "excluded": [
+          "expert validity judgment",
+          "economic optimization"
+        ],
+        "included": [
+          "arrivals",
+          "service_resources",
+          "queueing"
+        ]
+      },
+      "time_semantics": {
+        "base_unit": "hour",
+        "end": 72,
+        "mode": "discrete_event",
+        "start": 0
+      }
+    },
+    "required_connections": [
+      {
+        "contract": "workbench.project",
+        "object_id": "project-equipment-maintenance",
+        "revision": 1,
+        "role": "project",
+        "schema_version": "0.1.0"
+      },
+      {
+        "contract": "workbench.scenario",
+        "object_id": "scenario-equipment-maintenance",
+        "revision": 1,
+        "role": "scenario",
+        "schema_version": "0.1.0"
+      },
+      {
+        "contract": "workbench.experiment",
+        "object_id": "experiment-equipment-maintenance",
+        "revision": 1,
+        "role": "experiment",
+        "schema_version": "0.1.0"
+      },
+      {
+        "contract": "workbench.simulation_run",
+        "object_id": "run-equipment-maintenance",
+        "revision": 1,
+        "role": "simulation_run",
+        "schema_version": "0.1.0"
+      }
+    ]
+  },
+  "request_template": {
+    "operation": "experiment.run",
+    "requested_output_contract": "simulation.result_set@0.1",
+    "seed": 17
+  },
+  "role": "domain_mvp",
+  "schema_version": "0.1.0"
+}

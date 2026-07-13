@@ -1,0 +1,261 @@
+{
+  "case_id": "traffic-intersection",
+  "contract": "simulation.conformance_case",
+  "expected": {
+    "artifact_semantic_role": "result_set",
+    "result_set_contract": "simulation.result_set@0.1",
+    "top_level_failure_codes": [
+      "protocol_incompatible",
+      "input_contract_failed",
+      "adapter_failed",
+      "output_contract_failed",
+      "artifact_contract_failed",
+      "timeout",
+      "cancelled"
+    ]
+  },
+  "mechanism": "agent_based_network",
+  "provider_fragment": {
+    "domain_pack": {
+      "adapter_requirements": {
+        "method_families": [
+          "agent_based"
+        ],
+        "operations": [
+          "experiment.run"
+        ],
+        "seed_control": "required"
+      },
+      "compatible_modeling_ir": [
+        "simulation.model_spec@0.1"
+      ],
+      "contract": "simulation.domain_pack",
+      "created_at": "2026-07-14T00:00:00Z",
+      "created_by": {
+        "id": "simulation-skills.contract-builder",
+        "kind": "adapter"
+      },
+      "default_experiment_templates": [
+        "traffic-intersection-experiment"
+      ],
+      "extensions": {},
+      "method_payload_contracts": [
+        "simulation.abm_method_payload@0.1"
+      ],
+      "metric_definitions": [
+        {
+          "description": "Vehicles exiting during the horizon.",
+          "metric_id": "throughput",
+          "unit": "count"
+        },
+        {
+          "description": "Mean vehicle wait in model steps.",
+          "metric_id": "average_wait_steps",
+          "unit": "step"
+        }
+      ],
+      "object_id": "traffic-intersection",
+      "pack_id": "traffic-intersection",
+      "pack_version": "0.1.0",
+      "parent_revision": null,
+      "provenance": {
+        "parent_refs": [],
+        "source_artifact_refs": []
+      },
+      "revision": 1,
+      "scenario_templates": [
+        {
+          "schema_ref": "urn:simulation-skills:traffic-intersection:scenario@0.1",
+          "template_id": "traffic-intersection-baseline"
+        }
+      ],
+      "schema_version": "0.1.0",
+      "validation_fixture_refs": [
+        "cases/traffic-intersection/case.json"
+      ],
+      "visualization_hints": [
+        "metric_table"
+      ]
+    },
+    "domain_pack_descriptor": {
+      "manifest_digest": "sha256:a63ab26968396bfc4c85f4f9c3f30e287b047a8560652666593173aeaff89d9f",
+      "pack_id": "traffic-intersection",
+      "pack_version": "0.1.0",
+      "template_id": "traffic-intersection-baseline"
+    },
+    "expected_result_template": {
+      "adapter_diagnostics": [
+        {
+          "code": "fixture_checks_passed",
+          "fixture_only": true
+        }
+      ],
+      "claim_state": "draft_unreviewed",
+      "metrics": [
+        {
+          "dimensions": {},
+          "metric_id": "throughput",
+          "unit": "count",
+          "value": 106
+        },
+        {
+          "dimensions": {},
+          "metric_id": "average_wait_steps",
+          "unit": "step",
+          "value": 12
+        }
+      ],
+      "seed": 23
+    },
+    "method_payload": {
+      "agent_types": [
+        {
+          "agent_type_id": "vehicle",
+          "state_fields": [
+            "edge_id",
+            "speed",
+            "wait_steps"
+          ]
+        }
+      ],
+      "contract": "simulation.abm_method_payload",
+      "created_at": "2026-07-14T00:00:00Z",
+      "created_by": {
+        "id": "simulation-skills.contract-builder",
+        "kind": "adapter"
+      },
+      "extensions": {},
+      "horizon_steps": 3600,
+      "network": {
+        "directed": true,
+        "edge_count": 8,
+        "node_count": 4
+      },
+      "object_id": "abm-traffic-intersection",
+      "output_metrics": [
+        {
+          "description": "Vehicles exiting during the horizon.",
+          "metric_id": "throughput",
+          "unit": "count"
+        },
+        {
+          "description": "Mean vehicle wait in model steps.",
+          "metric_id": "average_wait_steps",
+          "unit": "step"
+        }
+      ],
+      "parent_revision": null,
+      "provenance": {
+        "parent_refs": [],
+        "source_artifact_refs": []
+      },
+      "revision": 1,
+      "schema_version": "0.1.0",
+      "step_size": 1,
+      "time_unit": "second",
+      "update_order": "random_sequential"
+    },
+    "model_spec": {
+      "assumptions": [
+        "This fixture checks contracts only; it does not establish behavioral validity."
+      ],
+      "contract": "simulation.model_spec",
+      "created_at": "2026-07-14T00:00:00Z",
+      "created_by": {
+        "id": "simulation-skills.contract-builder",
+        "kind": "adapter"
+      },
+      "domain_extensions": [],
+      "extensions": {},
+      "implementation_artifact_ref": null,
+      "method_payload_ref": {
+        "contract": "simulation.abm_method_payload",
+        "digest": "sha256:f83b3d399c6f2bf8ec2750c1df174b278194e4c750e0d393fcea328078267866",
+        "object_id": "abm-traffic-intersection",
+        "revision": 1,
+        "schema_version": "0.1.0"
+      },
+      "metrics": [
+        {
+          "description": "Vehicles exiting during the horizon.",
+          "metric_id": "throughput",
+          "unit": "count"
+        },
+        {
+          "description": "Mean vehicle wait in model steps.",
+          "metric_id": "average_wait_steps",
+          "unit": "step"
+        }
+      ],
+      "object_id": "model-traffic-intersection",
+      "parameters": [
+        {
+          "parameter_id": "signal_cycle",
+          "unit": "second",
+          "value": 60
+        }
+      ],
+      "parent_revision": null,
+      "provenance": {
+        "parent_refs": [],
+        "source_artifact_refs": []
+      },
+      "revision": 1,
+      "schema_version": "0.1.0",
+      "system_boundary": {
+        "excluded": [
+          "expert validity judgment",
+          "network calibration"
+        ],
+        "included": [
+          "vehicles",
+          "signal_phases",
+          "road_network"
+        ]
+      },
+      "time_semantics": {
+        "base_unit": "second",
+        "end": 3600,
+        "mode": "discrete_step",
+        "start": 0
+      }
+    },
+    "required_connections": [
+      {
+        "contract": "workbench.project",
+        "object_id": "project-traffic-intersection",
+        "revision": 1,
+        "role": "project",
+        "schema_version": "0.1.0"
+      },
+      {
+        "contract": "workbench.scenario",
+        "object_id": "scenario-traffic-intersection",
+        "revision": 1,
+        "role": "scenario",
+        "schema_version": "0.1.0"
+      },
+      {
+        "contract": "workbench.experiment",
+        "object_id": "experiment-traffic-intersection",
+        "revision": 1,
+        "role": "experiment",
+        "schema_version": "0.1.0"
+      },
+      {
+        "contract": "workbench.simulation_run",
+        "object_id": "run-traffic-intersection",
+        "revision": 1,
+        "role": "simulation_run",
+        "schema_version": "0.1.0"
+      }
+    ]
+  },
+  "request_template": {
+    "operation": "experiment.run",
+    "requested_output_contract": "simulation.result_set@0.1",
+    "seed": 23
+  },
+  "role": "cross_domain_check",
+  "schema_version": "0.1.0"
+}

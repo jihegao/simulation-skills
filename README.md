@@ -25,6 +25,8 @@ only a GitHub-friendly way to keep the suite together.
   with embedded port GIS points and a CesiumJS 3D globe viewer.
 - `examples/global_warming_system_dynamics`: a self-contained stock-flow page
   for short- and medium-term global warming scenario checks.
+- `simulation_skills_contracts`: the provider-owned Version 0.1 contract
+  package, deterministic conformance export, and contract-only fake adapter.
 
 See `examples/README.md` for the runnable simulation case library.
 
@@ -61,6 +63,22 @@ Run the copied AnyLogic reproduction tests:
 python3 -m unittest discover -s tests -v
 ```
 
+Build and validate the Version 0.1 provider export:
+
+```bash
+python3 scripts/build_contract_export.py
+python3 -m unittest tests.test_v0_1_provider_contracts -v
+python3 -m unittest tests.test_v0_1_fake_adapter -v
+python3 -m unittest tests.test_v0_1_clean_install -v
+```
+
+The export root is
+`simulation_skills_contracts/conformance/v0_1/`. Its manifest locks every
+document by byte digest and locks the ordered document catalog by RFC 8785
+digest. The installed `simulation-skills-fake-adapter` executable exists only
+for cross-repository contract conformance; it is not a real simulation runtime
+and cannot promote a claim beyond `draft_unreviewed`.
+
 The Mesa reproduction tests require Mesa, NetworkX, and Solara assets. A local
 Python 3.12 environment was used when these examples were copied from the
 source workspace.
@@ -73,4 +91,5 @@ delegate method-specific work to sibling skills such as `abm-modeling` and
 
 See `docs/skill-boundaries.md` for the ownership model and
 `docs/install.md` for installation details. See `agent.md` for the lightweight
-simulation-dispatcher roadmap and method coverage registry.
+simulation-dispatcher roadmap and method coverage registry. See
+`docs/contracts/v0.1.md` for the provider contract and export boundary.

@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://simulation-skills.local/contracts/v0.1/conformance-case.schema.json",
+  "x-contract-id": "simulation.conformance_case",
+  "x-schema-version": "0.1.0",
+  "title": "Provider Conformance Case Fragment 0.1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schema_version", "case_id", "role", "mechanism", "provider_fragment", "request_template", "expected"],
+  "properties": {
+    "contract": {"const": "simulation.conformance_case"},
+    "schema_version": {"const": "0.1.0"},
+    "case_id": {"enum": ["warehouse-queueing", "equipment-maintenance", "traffic-intersection"]},
+    "role": {"enum": ["workflow_continuity", "domain_mvp", "cross_domain_check"]},
+    "mechanism": {"enum": ["queueing", "maintenance_repair", "agent_based_network"]},
+    "provider_fragment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["domain_pack", "domain_pack_descriptor", "model_spec", "method_payload", "required_connections", "expected_result_template"],
+      "properties": {
+        "domain_pack": {"$ref": "domain-pack.schema.json"},
+        "domain_pack_descriptor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["pack_id", "pack_version", "template_id", "manifest_digest"],
+          "properties": {
+            "pack_id": {"$ref": "common.schema.json#/$defs/identifier"},
+            "pack_version": {"$ref": "common.schema.json#/$defs/semver"},
+            "template_id": {"$ref": "common.schema.json#/$defs/identifier"},
+            "manifest_digest": {"$ref": "common.schema.json#/$defs/digest"}
+          }
+        },
+        "model_spec": {"$ref": "model-spec.schema.json"},
+        "method_payload": {
+          "oneOf": [
+            {"$ref": "des-method-payload.schema.json"},
+            {"$ref": "abm-method-payload.schema.json"}
+          ]
+        },
+        "required_connections": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {"$ref": "#/$defs/logicalConnection"}
+        },
+        "expected_result_template": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["seed", "metrics", "adapter_diagnostics", "claim_state"],
+          "properties": {
+            "seed": {"type": "integer", "minimum": 0},
+            "metrics": {"type": "array", "minItems": 1, "items": {"$ref": "common.schema.json#/$defs/metricValue"}},
+            "adapter_diagnostics": {"type": "array", "items": {"type": "object"}},
+            "claim_state": {"const": "draft_unreviewed"}
+          }
+        }
+      }
+    },
+    "request_template": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operation", "seed", "requested_output_contract"],
+      "properties": {
+        "operation": {"const": "experiment.run"},
+        "seed": {"type": "integer", "minimum": 0},
+        "requested_output_contract": {"const": "simulation.result_set@0.1"}
+      }
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_semantic_role", "result_set_contract", "top_level_failure_codes"],
+      "properties": {
+        "artifact_semantic_role": {"const": "result_set"},
+        "result_set_contract": {"const": "simulation.result_set@0.1"},
+        "top_level_failure_codes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"enum": ["protocol_incompatible", "input_contract_failed", "adapter_failed", "output_contract_failed", "artifact_contract_failed", "timeout", "cancelled"]},
+          "uniqueItems": true
+        }
+      }
+    }
+  },
+  "$defs": {
+    "logicalConnection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "contract", "schema_version", "object_id", "revision"],
+      "properties": {
+        "role": {"enum": ["project", "scenario", "experiment", "simulation_run"]},
+        "contract": {"enum": ["workbench.project", "workbench.scenario", "workbench.experiment", "workbench.simulation_run"]},
+        "schema_version": {"const": "0.1.0"},
+        "object_id": {"$ref": "common.schema.json#/$defs/identifier"},
+        "revision": {"type": "integer", "minimum": 1}
+      },
+      "allOf": [
+        {"if": {"properties": {"role": {"const": "project"}}}, "then": {"properties": {"contract": {"const": "workbench.project"}}}},
+        {"if": {"properties": {"role": {"const": "scenario"}}}, "then": {"properties": {"contract": {"const": "workbench.scenario"}}}},
+        {"if": {"properties": {"role": {"const": "experiment"}}}, "then": {"properties": {"contract": {"const": "workbench.experiment"}}}},
+        {"if": {"properties": {"role": {"const": "simulation_run"}}}, "then": {"properties": {"contract": {"const": "workbench.simulation_run"}}}}
+      ]
+    }
+  }
+}

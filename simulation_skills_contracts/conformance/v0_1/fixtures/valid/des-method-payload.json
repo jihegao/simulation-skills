@@ -1,0 +1,82 @@
+{
+  "arrival_processes": [
+    {
+      "arrival_id": "equipment-maintenance-arrivals",
+      "distribution": "exponential",
+      "entity_type_id": "equipment-maintenance-job",
+      "parameters": [
+        {
+          "parameter_id": "mean_interarrival",
+          "unit": "hour",
+          "value": 2
+        }
+      ]
+    }
+  ],
+  "contract": "simulation.des_method_payload",
+  "created_at": "2026-07-14T00:00:00Z",
+  "created_by": {
+    "id": "simulation-skills.contract-builder",
+    "kind": "adapter"
+  },
+  "entity_types": [
+    {
+      "entity_type_id": "equipment-maintenance-job"
+    }
+  ],
+  "extensions": {},
+  "horizon": 72,
+  "object_id": "des-equipment-maintenance",
+  "output_metrics": [
+    {
+      "description": "Completed jobs in the fixed horizon.",
+      "metric_id": "completed_jobs",
+      "unit": "count"
+    },
+    {
+      "description": "Mean pre-service wait.",
+      "metric_id": "average_wait",
+      "unit": "hour"
+    }
+  ],
+  "parent_revision": null,
+  "process_steps": [
+    {
+      "parameters": [
+        {
+          "parameter_id": "minimum",
+          "unit": "hour",
+          "value": 0.5
+        },
+        {
+          "parameter_id": "mode",
+          "unit": "hour",
+          "value": 1
+        },
+        {
+          "parameter_id": "maximum",
+          "unit": "hour",
+          "value": 2
+        }
+      ],
+      "resource_id": "maintenance-team",
+      "service_distribution": "triangular",
+      "step_id": "maintenance_repair-service"
+    }
+  ],
+  "provenance": {
+    "parent_refs": [],
+    "source_artifact_refs": []
+  },
+  "resources": [
+    {
+      "capacity": 2,
+      "capacity_unit": "count",
+      "resource_id": "maintenance-team"
+    }
+  ],
+  "revision": 1,
+  "routing": [],
+  "schema_version": "0.1.0",
+  "time_unit": "hour"
+}

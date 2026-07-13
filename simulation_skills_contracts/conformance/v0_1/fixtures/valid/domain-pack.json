@@ -1,0 +1,61 @@
+{
+  "adapter_requirements": {
+    "method_families": [
+      "discrete_event"
+    ],
+    "operations": [
+      "experiment.run"
+    ],
+    "seed_control": "required"
+  },
+  "compatible_modeling_ir": [
+    "simulation.model_spec@0.1"
+  ],
+  "contract": "simulation.domain_pack",
+  "created_at": "2026-07-14T00:00:00Z",
+  "created_by": {
+    "id": "simulation-skills.contract-builder",
+    "kind": "adapter"
+  },
+  "default_experiment_templates": [
+    "equipment-maintenance-experiment"
+  ],
+  "extensions": {},
+  "method_payload_contracts": [
+    "simulation.des_method_payload@0.1"
+  ],
+  "metric_definitions": [
+    {
+      "description": "Completed jobs in the fixed horizon.",
+      "metric_id": "completed_jobs",
+      "unit": "count"
+    },
+    {
+      "description": "Mean pre-service wait.",
+      "metric_id": "average_wait",
+      "unit": "hour"
+    }
+  ],
+  "object_id": "equipment-maintenance",
+  "pack_id": "equipment-maintenance",
+  "pack_version": "0.1.0",
+  "parent_revision": null,
+  "provenance": {
+    "parent_refs": [],
+    "source_artifact_refs": []
+  },
+  "revision": 1,
+  "scenario_templates": [
+    {
+      "schema_ref": "urn:simulation-skills:equipment-maintenance:scenario@0.1",
+      "template_id": "equipment-maintenance-baseline"
+    }
+  ],
+  "schema_version": "0.1.0",
+  "validation_fixture_refs": [
+    "cases/equipment-maintenance/case.json"
+  ],
+  "visualization_hints": [
+    "metric_table"
+  ]
+}

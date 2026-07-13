@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://simulation-skills.local/contracts/v0.1/abm-method-payload.schema.json",
+  "x-contract-id": "simulation.abm_method_payload",
+  "x-schema-version": "0.1.0",
+  "title": "Narrow Traffic ABM Method Payload 0.1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract", "schema_version", "object_id", "revision", "parent_revision",
+    "created_at", "created_by", "provenance", "extensions",
+    "time_unit", "step_size", "horizon_steps", "agent_types", "network",
+    "update_order", "output_metrics"
+  ],
+  "allOf": [{"if": {"properties": {"revision": {"const": 1}}, "required": ["revision"]}, "then": {"properties": {"parent_revision": {"type": "null"}}}, "else": {"properties": {"parent_revision": {"type": "integer", "minimum": 1}}}}],
+  "properties": {
+    "contract": {"const": "simulation.abm_method_payload"},
+    "schema_version": {"const": "0.1.0"},
+    "object_id": {"$ref": "common.schema.json#/$defs/identifier"},
+    "revision": {"type": "integer", "minimum": 1},
+    "parent_revision": {"type": ["integer", "null"], "minimum": 1},
+    "created_at": {"$ref": "common.schema.json#/$defs/utcTimestamp"},
+    "created_by": {"$ref": "common.schema.json#/$defs/actor"},
+    "provenance": {"$ref": "common.schema.json#/$defs/provenance"},
+    "extensions": {"$ref": "common.schema.json#/$defs/extensions"},
+    "time_unit": {"$ref": "common.schema.json#/$defs/unit"},
+    "step_size": {"type": "number", "exclusiveMinimum": 0},
+    "horizon_steps": {"type": "integer", "minimum": 1},
+    "agent_types": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["agent_type_id", "state_fields"],
+        "properties": {
+          "agent_type_id": {"$ref": "common.schema.json#/$defs/identifier"},
+          "state_fields": {"type": "array", "minItems": 1, "items": {"$ref": "common.schema.json#/$defs/identifier"}, "uniqueItems": true}
+        }
+      }
+    },
+    "network": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node_count", "edge_count", "directed"],
+      "properties": {
+        "node_count": {"type": "integer", "minimum": 1},
+        "edge_count": {"type": "integer", "minimum": 1},
+        "directed": {"type": "boolean"}
+      }
+    },
+    "update_order": {"enum": ["simultaneous", "random_sequential"]},
+    "output_metrics": {"type": "array", "minItems": 1, "items": {"$ref": "common.schema.json#/$defs/metricDefinition"}}
+  }
+}
