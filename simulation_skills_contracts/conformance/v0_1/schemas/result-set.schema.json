@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://simulation-skills.local/contracts/v0.1/result-set.schema.json",
+  "x-contract-id": "simulation.result_set",
+  "x-schema-version": "0.1.0",
+  "title": "Simulation Result Set 0.1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract", "schema_version", "object_id", "revision", "parent_revision",
+    "created_at", "created_by", "provenance", "extensions",
+    "simulation_run_ref", "model_spec_ref", "experiment_ref", "seed", "metrics",
+    "raw_output_artifact_refs", "adapter_diagnostics", "claim_state"
+  ],
+  "allOf": [{"if": {"properties": {"revision": {"const": 1}}, "required": ["revision"]}, "then": {"properties": {"parent_revision": {"type": "null"}}}, "else": {"properties": {"parent_revision": {"type": "integer", "minimum": 1}}}}],
+  "properties": {
+    "contract": {"const": "simulation.result_set"},
+    "schema_version": {"const": "0.1.0"},
+    "object_id": {"$ref": "common.schema.json#/$defs/identifier"},
+    "revision": {"type": "integer", "minimum": 1},
+    "parent_revision": {"type": ["integer", "null"], "minimum": 1},
+    "created_at": {"$ref": "common.schema.json#/$defs/utcTimestamp"},
+    "created_by": {"$ref": "common.schema.json#/$defs/actor"},
+    "provenance": {"$ref": "common.schema.json#/$defs/provenance"},
+    "extensions": {"$ref": "common.schema.json#/$defs/extensions"},
+    "simulation_run_ref": {
+      "allOf": [
+        {"$ref": "common.schema.json#/$defs/objectRef"},
+        {"properties": {"contract": {"const": "workbench.simulation_run"}, "schema_version": {"const": "0.1.0"}}}
+      ]
+    },
+    "model_spec_ref": {
+      "allOf": [
+        {"$ref": "common.schema.json#/$defs/objectRef"},
+        {"properties": {"contract": {"const": "simulation.model_spec"}, "schema_version": {"const": "0.1.0"}}}
+      ]
+    },
+    "experiment_ref": {
+      "allOf": [
+        {"$ref": "common.schema.json#/$defs/objectRef"},
+        {"properties": {"contract": {"const": "workbench.experiment"}, "schema_version": {"const": "0.1.0"}}}
+      ]
+    },
+    "seed": {"type": "integer", "minimum": 0},
+    "metrics": {"type": "array", "minItems": 1, "items": {"$ref": "common.schema.json#/$defs/metricValue"}},
+    "raw_output_artifact_refs": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/artifactRef"}, "uniqueItems": true},
+    "adapter_diagnostics": {"type": "array", "items": {"type": "object"}},
+    "claim_state": {"const": "draft_unreviewed"}
+  }
+}

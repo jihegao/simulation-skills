@@ -1,0 +1,83 @@
+{
+  "adapter_diagnostics": [
+    {
+      "code": "fixture_checks_passed",
+      "fixture_only": true
+    }
+  ],
+  "claim_state": "draft_unreviewed",
+  "contract": "simulation.result_set",
+  "created_at": "2026-07-14T00:00:00Z",
+  "created_by": {
+    "id": "simulation-skills.fake-conformance",
+    "kind": "adapter"
+  },
+  "experiment_ref": {
+    "contract": "workbench.experiment",
+    "digest": "sha256:dc4e1d36929da9ba858456e56c0ec45e2c27bcef1bcb76b5a06c2df13be1fb9d",
+    "object_id": "experiment-syntax-example",
+    "revision": 1,
+    "schema_version": "0.1.0"
+  },
+  "extensions": {},
+  "metrics": [
+    {
+      "dimensions": {},
+      "metric_id": "completed_jobs",
+      "unit": "count",
+      "value": 100
+    },
+    {
+      "dimensions": {},
+      "metric_id": "average_wait",
+      "unit": "hour",
+      "value": 1.3
+    }
+  ],
+  "model_spec_ref": {
+    "contract": "simulation.model_spec",
+    "digest": "sha256:209150e1bf64764f2404047e09202d0797e3920152422a0a6fe059edaed39d04",
+    "object_id": "model-equipment-maintenance",
+    "revision": 1,
+    "schema_version": "0.1.0"
+  },
+  "object_id": "result-syntax-example",
+  "parent_revision": null,
+  "provenance": {
+    "parent_refs": [
+      {
+        "contract": "workbench.simulation_run",
+        "digest": "sha256:e007ae55068bce567a8472b86c73d513da0000cf506dd8a575bbc757611f9880",
+        "object_id": "run-syntax-example",
+        "revision": 1,
+        "schema_version": "0.1.0"
+      },
+      {
+        "contract": "simulation.model_spec",
+        "digest": "sha256:209150e1bf64764f2404047e09202d0797e3920152422a0a6fe059edaed39d04",
+        "object_id": "model-equipment-maintenance",
+        "revision": 1,
+        "schema_version": "0.1.0"
+      },
+      {
+        "contract": "workbench.experiment",
+        "digest": "sha256:dc4e1d36929da9ba858456e56c0ec45e2c27bcef1bcb76b5a06c2df13be1fb9d",
+        "object_id": "experiment-syntax-example",
+        "revision": 1,
+        "schema_version": "0.1.0"
+      }
+    ],
+    "source_artifact_refs": []
+  },
+  "raw_output_artifact_refs": [],
+  "revision": 1,
+  "schema_version": "0.1.0",
+  "seed": 17,
+  "simulation_run_ref": {
+    "contract": "workbench.simulation_run",
+    "digest": "sha256:e007ae55068bce567a8472b86c73d513da0000cf506dd8a575bbc757611f9880",
+    "object_id": "run-syntax-example",
+    "revision": 1,
+    "schema_version": "0.1.0"
+  }
+}

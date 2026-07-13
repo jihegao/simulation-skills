@@ -12,6 +12,14 @@
 - `discrete-event-modeling`：SimPy/DES 建模、队列、资源、库存、维修和实验解释。
 - `simulation-model-conversion`：从描述、AnyLogic/Mesa/SimPy 结构或视觉原型转换为可运行仿真产物。
 - `examples/`：保存可运行案例和已迁移的机制复现。
+- `simulation_skills_contracts`：权威发布 `simulation.model_spec`、
+  `simulation.result_set`、`simulation.domain_pack`、DES method payload 和仅服务于
+  交通跨域契约夹具的窄 ABM method payload；同时提供不可晋升 claim 的契约测试 adapter。
+
+这里的 Version 0.1 provider 合同只拥有建模、Domain Pack 和标准结果对象。Project、
+Scenario、Experiment、Simulation Run、Verification、Finding 和 Reproducibility Manifest
+仍由 Workbench 拥有。provider case 只声明这些对象的 logical required connection，不伪造
+Workbench 对象或 digest；最终联合 bundle 由 Workbench 绑定权威引用后物化完整 Result Set。
 
 当前只在路由层覆盖、尚未做成完整方法 skill 的能力：
 
@@ -90,3 +98,7 @@
 - 不把示例页面或截图当成唯一证据。
 - 不在没有机制映射和实验边界时承诺“等价复现”。
 - 不因为领域相似就复用旧路线；必须检查主导机制、数据形状、实现栈和验证方式是否匹配。
+- 不把 `simulation-skills-fake-adapter` 描述为真实 warehouse runtime、模型有效性证据或
+  Workstream 1 实现。
+- 不从 provider 写入任何 `workbench.*` 对象，不读取 Workbench 源码树，也不晋升
+  `draft_unreviewed` claim。

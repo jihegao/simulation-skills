@@ -1,0 +1,70 @@
+{
+  "assumptions": [
+    "This fixture checks contracts only; it does not establish behavioral validity."
+  ],
+  "contract": "simulation.model_spec",
+  "created_at": "2026-07-14T00:00:00Z",
+  "created_by": {
+    "id": "simulation-skills.contract-builder",
+    "kind": "adapter"
+  },
+  "domain_extensions": [],
+  "extensions": {},
+  "implementation_artifact_ref": null,
+  "method_payload_ref": {
+    "contract": "simulation.des_method_payload",
+    "digest": "sha256:d3c3a7c8f97a27f7959cf1967221b0074ddb59f47c83954086148c9f497de964",
+    "object_id": "des-equipment-maintenance",
+    "revision": 1,
+    "schema_version": "0.1.0"
+  },
+  "metrics": [
+    {
+      "description": "Completed jobs in the fixed horizon.",
+      "metric_id": "completed_jobs",
+      "unit": "count"
+    },
+    {
+      "description": "Mean pre-service wait.",
+      "metric_id": "average_wait",
+      "unit": "hour"
+    }
+  ],
+  "object_id": "model-equipment-maintenance",
+  "parameters": [
+    {
+      "parameter_id": "lead_time",
+      "unit": "hour",
+      "value": 48
+    },
+    {
+      "parameter_id": "resource_capacity",
+      "unit": "count",
+      "value": 2
+    }
+  ],
+  "parent_revision": null,
+  "provenance": {
+    "parent_refs": [],
+    "source_artifact_refs": []
+  },
+  "revision": 1,
+  "schema_version": "1.0.0",
+  "system_boundary": {
+    "excluded": [
+      "expert validity judgment",
+      "economic optimization"
+    ],
+    "included": [
+      "arrivals",
+      "service_resources",
+      "queueing"
+    ]
+  },
+  "time_semantics": {
+    "base_unit": "hour",
+    "end": 72,
+    "mode": "discrete_event",
+    "start": 0
+  }
+}

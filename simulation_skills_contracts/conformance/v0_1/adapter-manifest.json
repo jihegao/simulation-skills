@@ -1,0 +1,29 @@
+{
+  "adapter_id": "simulation-skills.fake-conformance",
+  "adapter_version": "0.1.0",
+  "contract": "simulation.adapter_protocol.manifest",
+  "domain_pack_ids": [
+    "equipment-maintenance"
+  ],
+  "entrypoint": [
+    "simulation-skills-fake-adapter"
+  ],
+  "input_contracts": [
+    "simulation.model_spec@0.1",
+    "workbench.experiment@0.1"
+  ],
+  "method_families": [
+    "discrete_event"
+  ],
+  "operations": [
+    "experiment.run"
+  ],
+  "output_contracts": [
+    "simulation.result_set@0.1"
+  ],
+  "protocol_versions": [
+    "0.1.0"
+  ],
+  "schema_version": "0.1.0",
+  "seed_control": "required"
+}
