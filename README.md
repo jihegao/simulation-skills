@@ -26,7 +26,8 @@ only a GitHub-friendly way to keep the suite together.
 - `examples/global_warming_system_dynamics`: a self-contained stock-flow page
   for short- and medium-term global warming scenario checks.
 - `simulation_skills_contracts`: the provider-owned Version 0.1 contract
-  package, deterministic conformance export, and contract-only fake adapter.
+  package, deterministic conformance export, contract-only fake adapter, and
+  the independently packaged real warehouse queue SimPy adapter.
 
 See `examples/README.md` for the runnable simulation case library.
 
@@ -69,6 +70,7 @@ Build and validate the Version 0.1 provider export:
 python3 scripts/build_contract_export.py
 python3 -m unittest tests.test_v0_1_provider_contracts -v
 python3 -m unittest tests.test_v0_1_fake_adapter -v
+python3 -m unittest tests.test_v0_1_warehouse_des_adapter -v
 python3 -m unittest tests.test_v0_1_clean_install -v
 ```
 
@@ -84,6 +86,26 @@ with joint bundle digest
 `sha256:6160830cf1f8dfd1699fd97c66ca437de41beaf3795e53b9d09d2d3fe1b00fb6`.
 The pin closes the Version 0.1 contract baseline; it does not prove a production
 sandbox or authorize the fake adapter as a real runtime.
+
+## Real Warehouse Queue Adapter
+
+The installed `simulation-skills-warehouse-des-adapter` executable implements
+the narrow Workstream 1 warehouse continuity slice with SimPy. Its logical ID
+is `simulation-skills.simpy.warehouse-des`, and it supports one
+`experiment.run` operation for the `warehouse-queueing` Domain Pack.
+
+The adapter consumes a closed, self-contained execution snapshot, runs an
+exponential-arrival FIFO queue with a constrained resource and triangular
+service times, and emits one complete `simulation.result_set` Artifact. The
+Result Set remains `draft_unreviewed`; the adapter reports its actual Python
+and SimPy runtime identity and explicitly does not claim calibration, warehouse
+validity, comparison, sensitivity, or causality.
+
+The real adapter manifest is packaged independently at
+`simulation_skills_contracts/adapters/warehouse_des/adapter-manifest.json`.
+It is deliberately not listed in the frozen Workstream 0 conformance export.
+The `contracts-v0.1.0` tag, joint bundle digest, fake adapter manifest, and
+contract fixtures therefore remain unchanged.
 
 The Mesa reproduction tests require Mesa, NetworkX, and Solara assets. A local
 Python 3.12 environment was used when these examples were copied from the
