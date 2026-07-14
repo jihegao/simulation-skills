@@ -79,6 +79,12 @@ digest. The installed `simulation-skills-fake-adapter` executable exists only
 for cross-repository contract conformance; it is not a real simulation runtime
 and cannot promote a claim beyond `draft_unreviewed`.
 
+The formal Workstream 0 provider pin is Git tag `contracts-v0.1.0` together
+with joint bundle digest
+`sha256:6160830cf1f8dfd1699fd97c66ca437de41beaf3795e53b9d09d2d3fe1b00fb6`.
+The pin closes the Version 0.1 contract baseline; it does not prove a production
+sandbox or authorize the fake adapter as a real runtime.
+
 The Mesa reproduction tests require Mesa, NetworkX, and Solara assets. A local
 Python 3.12 environment was used when these examples were copied from the
 source workspace.
