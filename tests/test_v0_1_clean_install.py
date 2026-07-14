@@ -10,6 +10,7 @@ import unittest
 
 from simulation_skills_contracts import V01SimulationContractRegistry, digest
 from tests.test_v0_1_fake_adapter import request
+from tests.test_v0_1_warehouse_des_adapter import request as warehouse_request
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -50,7 +51,10 @@ class CleanInstallTests(unittest.TestCase):
             )
             python = environment / "bin" / "python"
             subprocess.run(
-                [str(uv), "pip", "install", "--python", str(python), "jsonschema[format]>=4.20", "rfc8785==0.1.4"],
+                [
+                    str(uv), "pip", "install", "--python", str(python),
+                    "jsonschema[format]>=4.20", "rfc8785==0.1.4", "simpy>=4.0",
+                ],
                 cwd=root,
                 check=True,
                 stdout=subprocess.PIPE,
@@ -111,6 +115,46 @@ class CleanInstallTests(unittest.TestCase):
             result_set = json.loads((root / "artifacts" / "result-set.json").read_text())
             V01SimulationContractRegistry().validate_object(result_set)
             self.assertEqual(response["produced_refs"][0]["digest"], digest(result_set))
+
+            real_manifest_path = root / "warehouse-des-manifest.json"
+            subprocess.run(
+                [
+                    "simulation-skills-warehouse-des-adapter", "describe",
+                    "--response", str(real_manifest_path),
+                ],
+                cwd=root,
+                env=clean_env,
+                check=True,
+            )
+            real_manifest = json.loads(real_manifest_path.read_text())
+            self.assertEqual(
+                real_manifest["entrypoint"],
+                ["simulation-skills-warehouse-des-adapter"],
+            )
+            real_request = warehouse_request()
+            real_request_path = root / "warehouse-request.json"
+            real_response_path = root / "warehouse-response.json"
+            real_request_path.write_text(json.dumps(real_request), encoding="utf-8")
+            subprocess.run(
+                [
+                    "simulation-skills-warehouse-des-adapter", "execute",
+                    "--request", str(real_request_path),
+                    "--response", str(real_response_path),
+                    "--artifact-root", str(root / "warehouse-artifacts"),
+                ],
+                cwd=root,
+                env=clean_env,
+                check=True,
+            )
+            real_response = json.loads(real_response_path.read_text())
+            real_result = json.loads(
+                (root / "warehouse-artifacts" / "result-set.json").read_text()
+            )
+            V01SimulationContractRegistry().validate_object(real_result)
+            self.assertEqual(
+                real_response["produced_refs"][0]["digest"], digest(real_result)
+            )
+            self.assertIn("simpy@", real_response["execution_manifest"]["runtime_identity"])
 
 
 if __name__ == "__main__":
