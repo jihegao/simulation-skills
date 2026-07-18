@@ -123,8 +123,9 @@ repair times. It emits `availability` and aggregate `unplanned_downtime` in a
 complete `simulation.result_set`; identical snapshots replay to identical
 Result Set bytes.
 
-The Result Set and execution manifest echo the exact Domain Pack binding
-(`pack_id`, `pack_version`, and installed manifest digest). Results remain
+The Result Set optional extension echoes the exact Domain Pack binding; the
+closed execution manifest remains limited to protocol/runtime evidence
+(input digest, seed, runtime identity, and produced refs). Results remain
 `draft_unreviewed`: execution is not behavioral validation, calibration, or
 domain certification. The adapter never reads Workbench or Domain Pack storage
 and does not implement comparison, Finding, review, or export.
