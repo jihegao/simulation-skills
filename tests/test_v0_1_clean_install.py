@@ -11,6 +11,9 @@ import unittest
 from simulation_skills_contracts import V01SimulationContractRegistry, digest
 from tests.test_v0_1_fake_adapter import request
 from tests.test_v0_1_warehouse_des_adapter import request as warehouse_request
+from tests.test_v0_1_equipment_maintenance_adapter import (
+    request as equipment_maintenance_request,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -155,6 +158,58 @@ class CleanInstallTests(unittest.TestCase):
                 real_response["produced_refs"][0]["digest"], digest(real_result)
             )
             self.assertIn("simpy@", real_response["execution_manifest"]["runtime_identity"])
+
+            maintenance_manifest_path = root / "equipment-maintenance-manifest.json"
+            subprocess.run(
+                [
+                    "simulation-skills-equipment-maintenance-adapter", "describe",
+                    "--response", str(maintenance_manifest_path),
+                ],
+                cwd=root,
+                env=clean_env,
+                check=True,
+            )
+            maintenance_manifest = json.loads(maintenance_manifest_path.read_text())
+            self.assertEqual(
+                maintenance_manifest["entrypoint"],
+                ["simulation-skills-equipment-maintenance-adapter"],
+            )
+            maintenance_request = equipment_maintenance_request()
+            maintenance_request_path = root / "equipment-maintenance-request.json"
+            maintenance_response_path = root / "equipment-maintenance-response.json"
+            maintenance_request_path.write_text(
+                json.dumps(maintenance_request), encoding="utf-8"
+            )
+            subprocess.run(
+                [
+                    "simulation-skills-equipment-maintenance-adapter", "execute",
+                    "--request", str(maintenance_request_path),
+                    "--response", str(maintenance_response_path),
+                    "--artifact-root", str(root / "equipment-maintenance-artifacts"),
+                ],
+                cwd=root,
+                env=clean_env,
+                check=True,
+            )
+            maintenance_response = json.loads(maintenance_response_path.read_text())
+            maintenance_result = json.loads(
+                (
+                    root
+                    / "equipment-maintenance-artifacts"
+                    / "result-set.json"
+                ).read_text()
+            )
+            V01SimulationContractRegistry().validate_object(maintenance_result)
+            self.assertEqual(
+                maintenance_response["produced_refs"][0]["digest"],
+                digest(maintenance_result),
+            )
+            self.assertEqual(
+                maintenance_result["extensions"][
+                    "org.openai.simulation.domain_pack_execution"
+                ]["payload"],
+                maintenance_request["input_snapshot"]["domain_pack_binding"],
+            )
 
 
 if __name__ == "__main__":
