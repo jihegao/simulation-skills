@@ -27,7 +27,8 @@ only a GitHub-friendly way to keep the suite together.
   for short- and medium-term global warming scenario checks.
 - `simulation_skills_contracts`: the provider-owned Version 0.1 contract
   package, deterministic conformance export, contract-only fake adapter, and
-  the independently packaged real warehouse queue SimPy adapter.
+  independently packaged real warehouse queue and Equipment Maintenance SimPy
+  adapters.
 
 See `examples/README.md` for the runnable simulation case library.
 
@@ -71,6 +72,7 @@ python3 scripts/build_contract_export.py
 python3 -m unittest tests.test_v0_1_provider_contracts -v
 python3 -m unittest tests.test_v0_1_fake_adapter -v
 python3 -m unittest tests.test_v0_1_warehouse_des_adapter -v
+python3 -m unittest tests.test_v0_1_equipment_maintenance_adapter -v
 python3 -m unittest tests.test_v0_1_clean_install -v
 ```
 
@@ -106,6 +108,31 @@ The real adapter manifest is packaged independently at
 It is deliberately not listed in the frozen Workstream 0 conformance export.
 The `contracts-v0.1.0` tag, joint bundle digest, fake adapter manifest, and
 contract fixtures therefore remain unchanged.
+
+## Real Equipment Maintenance Adapter
+
+The installed `simulation-skills-equipment-maintenance-adapter` executable is
+the narrow Equipment Maintenance Domain Pack runtime. Its logical ID is
+`simulation-skills.simpy.equipment-maintenance`, and it supports one
+`experiment.run` operation for `equipment-maintenance`.
+
+The adapter accepts only a closed, self-contained snapshot. It runs a seeded
+SimPy model in which multiple assets fail according to exponential time to
+failure, queue for a constrained maintenance resource, and receive triangular
+repair times. It emits `availability` and aggregate `unplanned_downtime` in a
+complete `simulation.result_set`; identical snapshots replay to identical
+Result Set bytes.
+
+The Result Set and execution manifest echo the exact Domain Pack binding
+(`pack_id`, `pack_version`, and installed manifest digest). Results remain
+`draft_unreviewed`: execution is not behavioral validation, calibration, or
+domain certification. The adapter never reads Workbench or Domain Pack storage
+and does not implement comparison, Finding, review, or export.
+
+Its independently packaged manifest is
+`simulation_skills_contracts/adapters/equipment_maintenance/adapter-manifest.json`.
+Like the warehouse manifest, it is outside the frozen Workstream 0 conformance
+export.
 
 The Mesa reproduction tests require Mesa, NetworkX, and Solara assets. A local
 Python 3.12 environment was used when these examples were copied from the

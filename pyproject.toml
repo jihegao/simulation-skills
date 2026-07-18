@@ -27,11 +27,13 @@ simulation_skills_contracts = [
   "conformance/v0_1/fixtures/invalid/*.json",
   "conformance/v0_1/cases/*/*.json",
   "adapters/warehouse_des/*.json",
+  "adapters/equipment_maintenance/*.json",
 ]
 
 [project.scripts]
 simulation-skills-fake-adapter = "simulation_skills_contracts.fake_adapter:main"
 simulation-skills-warehouse-des-adapter = "simulation_skills_contracts.adapters.warehouse_des.adapter:main"
+simulation-skills-equipment-maintenance-adapter = "simulation_skills_contracts.adapters.equipment_maintenance.adapter:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
